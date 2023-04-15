@@ -7,6 +7,13 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+    background-color: var(--bg); 
+  }
+
+  :root {
+    --bg: #EBEBEB;
+    --black: #333333;
+    --prog: #A4B7BE;
   }
 
   *::-webkit-scrollbar {
@@ -34,6 +41,36 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Lato', sans-serif;
   }
 
+  input[type="range"]:focus {
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+  }
+
+  .track {
+    background: var(--prog);
+    width: 100%;
+    height: 1rem;
+    position: relative;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .animate-track {
+    background: linear-gradient(145deg, #fbfbfb, #d4d4d4);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(0%);
+    pointer-events: none;
+  }
+
   .selected {
     background: rgb(165, 181, 228);
   }
@@ -45,7 +82,27 @@ const GlobalStyles = createGlobalStyle`
 
   .library-active {
     margin-left: 20%;
-}
+  }
+
+  .spin-begin {
+    animation: spin 10s linear infinite;
+    animation-fill-mode: forwards;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .spin-pause {
+    animation-play-state: paused;
+    animation-fill-mode: forwards;
+  }
+  
 `;
 
 export default GlobalStyles;

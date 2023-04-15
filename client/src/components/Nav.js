@@ -2,20 +2,17 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMusic } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
-// import { useDispatch } from 'react-redux';
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
 
 const Nav = () => {
-  // const dispatch = useDispatch();
   const { setLibraryStatus } = useLibraryStatusStore();
 
   return (
     <StyleNav>
-      <h1>Waves</h1>
-      <button onClick={() => setLibraryStatus()}>
-        Library
+      <h1>
         <FontAwesomeIcon icon={faMusic} />
-      </button>
+      </h1>
+      <button onClick={() => setLibraryStatus()}>Library</button>
     </StyleNav>
   );
 };

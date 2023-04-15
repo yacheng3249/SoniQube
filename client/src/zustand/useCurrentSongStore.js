@@ -61,15 +61,15 @@ const changeState = (set, get) => ({
 });
 
 const useCurrentSongStore = create(
-  // persist(
-  (set, get) => ({
-    ...initialState,
-    ...changeState(set, get),
-  }),
-  {
-    name: "songs-store",
-  }
-  // )
+  persist(
+    (set, get) => ({
+      ...initialState,
+      ...changeState(set, get),
+    }),
+    {
+      name: "songs-store",
+    }
+  )
 );
 
 export default useCurrentSongStore;
