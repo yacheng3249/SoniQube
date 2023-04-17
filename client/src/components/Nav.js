@@ -4,7 +4,8 @@ import { faMusic } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
 
-const Nav = () => {
+// memo avoids this component keeping re-rendering when is unnecessary during parent component is re-rendering
+const Nav = React.memo(() => {
   const { setLibraryStatus } = useLibraryStatusStore();
 
   return (
@@ -15,7 +16,7 @@ const Nav = () => {
       <button onClick={() => setLibraryStatus()}>Library</button>
     </StyleNav>
   );
-};
+});
 
 const StyleNav = styled.div`
   min-height: 10vh;

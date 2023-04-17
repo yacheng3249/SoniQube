@@ -5,7 +5,7 @@ import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 import { useQuery } from "@apollo/client";
 import { GET_song } from "../utils/apolloGraphql";
 
-const Song = () => {
+const Song = React.memo(() => {
   const { currentId, currentSong } = useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
   const { data: songData, loading: get_song_loading } = useQuery(GET_song, {
@@ -33,7 +33,7 @@ const Song = () => {
       {/* )} */}
     </>
   );
-};
+});
 
 const SongContainer = styled.div`
   min-height: 60vh;
