@@ -8,9 +8,10 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    "register: email and passwrod are required."
     signUp(name: String, email: String!, password: String!): User
     login(email: String!, password: String!): Token
+    updateUserInfo(userUpdateInput: UserUpdateInput): User
+    deleteSong(id: Int): Response!
   }
 
   type Song {
@@ -30,6 +31,16 @@ const typeDefs = gql`
 
   type Token {
     token: String!
+  }
+
+  type Response {
+    success: Boolean!
+    message: String
+  }
+
+  input UserUpdateInput {
+    name: String
+    password: String
   }
 `;
 
