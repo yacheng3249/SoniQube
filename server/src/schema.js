@@ -4,12 +4,12 @@ const typeDefs = gql`
   type Query {
     song(id: Int): Song
     songs: [Song]
-    user(id: Int): User
+    user: User
   }
 
   type Mutation {
     signUp(name: String, email: String!, password: String!): User
-    login(email: String!, password: String!): Token
+    login(email: String!, password: String!): UserResponse
     updateUserInfo(userUpdateInput: UserUpdateInput): User
     deleteSong(id: Int): Response!
   }
@@ -27,15 +27,21 @@ const typeDefs = gql`
     id: Int
     email: String
     name: String
-  }
-
-  type Token {
-    token: String!
+    token: String
   }
 
   type Response {
     success: Boolean!
     message: String
+  }
+
+  type UserResponse {
+    "成功"
+    success: Boolean!
+    "訊息"
+    message: String
+    "會員"
+    user: User
   }
 
   input UserUpdateInput {

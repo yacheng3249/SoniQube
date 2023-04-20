@@ -25,3 +25,38 @@ export const GET_songs = gql`
     }
   }
 `;
+
+export const SIGNUP_MUTATION = gql`
+  mutation SignUp($name: String!, $email: String!, $password: String!) {
+    signUp(name: $name, email: $email, password: $password) {
+      id
+      name
+      email
+    }
+  }
+`;
+
+export const MUTATION_LOGIN = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      success
+      message
+      user {
+        id
+        email
+        name
+        token
+      }
+    }
+  }
+`;
+
+export const GET_user = gql`
+  query User {
+    user {
+      email
+      id
+      name
+    }
+  }
+`;

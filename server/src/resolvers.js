@@ -1,4 +1,4 @@
-const { context } = require("./index.js");
+const { ForbiddenError } = require("apollo-server");
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -16,12 +16,12 @@ const createToken = ({ id, email, name }) =>
     expiresIn: "1d",
   });
 
-const { ForbiddenError } = require("../node_modules/apollo-server");
 const isAuthenticated = (resolverFunc) => (parent, args, context) => {
   if (!context.user) throw new ForbiddenError("Please log in.");
   return resolverFunc.apply(null, [parent, args, context]);
 };
 
+// resolvers
 module.exports = {
   Query: {
     song: async (_, { id }) => {
@@ -31,12 +31,12 @@ module.exports = {
       return store.song.findMany();
     },
     user: isAuthenticated((root, args, { user }) => {
-      console.log(`resolver檔: ${user}`);
+      console.log(`resolver檔: ${user.name}`);
       return store.user.findUnique({ where: { id: user.id } });
     }),
   },
   Mutation: {
-    signUp: async (root, { name, email, password }, context) => {
+    signUp: async (root, { name, email, password }) => {
       // 1. Check if the email has been registered before.
       const isUserEmailDuplicate = await store.user.findFirst({
         where: { email },
@@ -50,7 +50,6 @@ module.exports = {
       // 2. Encrypt(加密) the password before storing it.
       const hashedPassword = await hash(password, SALT_ROUNDS);
       // 3. Create new user
-      // return addUser({ name, email, password: hashedPassword });
       return store.user.create({
         data: {
           name,
@@ -60,22 +59,27 @@ module.exports = {
       });
     },
 
-    login: async (root, { email, password }, context) => {
-      // 1. Find the user corresponding to the given email.
-      const user = await store.user.findFirst({ where: { email } });
-      if (!user) throw new Error("The email account does not exists.");
+    login: async (root, { email, password }) => {
+      try {
+        // 1. Find the user corresponding to the given email.
+        const user = await store.user.findFirst({ where: { email } });
+        if (!user) throw new Error("The email account does not exists.");
 
-      // 2. Compare the given password with the password stored in the database for the user.
-      const passwordIsValid = await bcrypt.compare(password, user.password);
-      if (!passwordIsValid) throw new Error("Wrong Password");
+        // 2. Compare the given password with the password stored in the database for the user.
+        const passwordIsValid = await bcrypt.compare(password, user.password);
+        if (!passwordIsValid) throw new Error("Wrong Password");
 
-      // 3. Return a token if successful.
-      const token = await createToken(user);
-      return { token };
+        // 3. Return a token if successful.
+        const token = await createToken(user);
+        user.token = token;
+        return { success: true, message: `Successfully login!`, user };
+      } catch (error) {
+        return { success: false, message: error };
+      }
     },
 
     updateUserInfo: isAuthenticated(
-      async (parent, { userUpdateInput }, context) => {
+      async (parent, { userUpdateInput }, { user }) => {
         //Filter empty values.
         const data = Object.keys(userUpdateInput).reduce((obj, key) => {
           if (userUpdateInput[key]) obj[key] = userUpdateInput[key];
@@ -86,7 +90,7 @@ module.exports = {
           const hashedPassword = await hash(data["password"], SALT_ROUNDS);
           data["password"] = hashedPassword;
         }
-        const { user } = context;
+
         return store.user.update({
           where: { id: user.id },
           data: data,

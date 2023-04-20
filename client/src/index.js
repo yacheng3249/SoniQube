@@ -4,19 +4,33 @@ import {
   ApolloProvider,
   createHttpLink,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import React from "react";
+import { HashRouter, Route } from "react-router-dom";
 // import ReactDOM from "react-dom";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import useSignInStore from "./zustand/useSignInStore";
 import reportWebVitals from "./reportWebVitals";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:4000",
 });
 
+const authLink = setContext((_, { headers }) => {
+  const token = useSignInStore.getState().token;
+  console.log("index:" + token);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  };
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
@@ -26,7 +40,9 @@ const root = createRoot(rootElement);
 root.render(
   <ApolloProvider client={client}>
     <StrictMode>
-      <App />
+      <HashRouter>
+        <App />
+      </HashRouter>
     </StrictMode>
   </ApolloProvider>
 );
