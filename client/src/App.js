@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 //Adding Components
 import Home from "./pages/index";
@@ -10,7 +10,6 @@ import SignUp from "./pages/SignUp";
 import GlobalStyles from "./components/GlobalStyle";
 import useLibraryStatusStore from "./zustand/useLibraryStatusStore";
 import useCurrentSongStore from "./zustand/useCurrentSongStore";
-import useSignInStore from "./zustand/useSignInStore";
 import { useQuery } from "@apollo/client";
 import { GET_song } from "./utils/apolloGraphql";
 import { Route, Routes } from "react-router-dom";
@@ -18,11 +17,8 @@ import { Route, Routes } from "react-router-dom";
 function App() {
   const { libraryStatus } = useLibraryStatusStore();
   const { currentId, setCurrentSong } = useCurrentSongStore();
-  const isSignIn = useSignInStore((state) => state.isSignIn);
-  const registration = useSignInStore((state) => state.registration);
   //Ref
   const audioRef = useRef(null);
-  const isSubmitted = useRef(false);
 
   const { data, loading: get_song_loading } = useQuery(GET_song, {
     variables: {
@@ -39,7 +35,7 @@ function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<SignIn isSubmitted={isSubmitted} />} />
+        <Route path="/login" element={<SignIn />} />
         <Route path="/registration" element={<SignUp />} />
       </Routes>
       <Library audioRef={audioRef} />

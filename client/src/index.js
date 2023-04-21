@@ -6,7 +6,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import React from "react";
-import { HashRouter, Route } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 // import ReactDOM from "react-dom";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -40,9 +40,9 @@ const root = createRoot(rootElement);
 root.render(
   <ApolloProvider client={client}>
     <StrictMode>
-      <HashRouter>
+      <BrowserRouter>
         <App />
-      </HashRouter>
+      </BrowserRouter>
     </StrictMode>
   </ApolloProvider>
 );

@@ -1,10 +1,14 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
-import { SIGNUP_MUTATION, GET_user } from "../utils/apolloGraphql";
+import { useMutation } from "@apollo/client";
+import { SIGNUP_MUTATION } from "../utils/apolloGraphql";
+import useSignInStore from "../zustand/useSignInStore";
+import { useNavigate } from "react-router-dom";
 
-const SignUp = ({ isSubmitted }) => {
+const SignUp = () => {
+  const navigate = useNavigate();
+  const { setToken } = useSignInStore();
   const {
     register,
     handleSubmit,
@@ -13,10 +17,15 @@ const SignUp = ({ isSubmitted }) => {
   } = useForm();
 
   const [signUpFn, { loading: signUpLoading }] = useMutation(SIGNUP_MUTATION, {
-    onCompleted({ register }) {
-      console.log(register);
+    onCompleted({ signUp }) {
+      if (signUp.success) {
+        setToken(signUp.user?.token);
+        navigate("/login");
+      }
     },
-    onError() {
+    onError(error) {
+      reset();
+      alert(error);
       return null;
     },
   });

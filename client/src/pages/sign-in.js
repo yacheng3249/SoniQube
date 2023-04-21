@@ -6,7 +6,7 @@ import { MUTATION_LOGIN, GET_user } from "../utils/apolloGraphql";
 import useSignInStore from "../zustand/useSignInStore";
 import { Link } from "react-router-dom";
 
-const SignIn = ({ isSubmitted }) => {
+const SignIn = () => {
   const { token, setToken, removeToken } = useSignInStore();
   const {
     register,
@@ -47,12 +47,10 @@ const SignIn = ({ isSubmitted }) => {
     await loginFn({
       variables: { email, password },
     });
-    isSubmitted.current = true;
   };
 
   const handleLogOut = () => {
     removeToken();
-    isSubmitted.current = false;
     reset();
   };
 
@@ -61,6 +59,7 @@ const SignIn = ({ isSubmitted }) => {
     loading: getUserLoading,
     refetch: getUser,
   } = useQuery(GET_user, {
+    fetchPolicy: "network-only",
     skip: !token,
     onError() {
       return null;
@@ -78,7 +77,7 @@ const SignIn = ({ isSubmitted }) => {
 
   return (
     <SignInContainer>
-      {isSubmitted.current && user ? (
+      {user ? (
         <div>
           <h2>Welcome {user.name}!</h2>
           <button>

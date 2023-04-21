@@ -12,19 +12,17 @@ const server = new ApolloServer({
       secret: process.env.SECRET,
       saltRounds: Number(process.env.SALT_ROUNDS),
     };
-    // 1. 取出
     const token = req.headers.authorization;
     if (token && token.startsWith("Bearer ")) {
       try {
-        // 2. 檢查 token + 取得解析出的資料
+        // Check the token and retrieve the decoded data
         const user = await jwt.verify(token.slice(7), context.secret);
-        // 3. 放進 context
+        // Put the data into the context
         return { ...context, user };
       } catch (e) {
         throw new Error("Your session expired. Sign in again.");
       }
     }
-    // 如果沒有 token 就回傳空的 context 出去
     return context;
   },
 });

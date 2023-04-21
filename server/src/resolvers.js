@@ -31,32 +31,44 @@ module.exports = {
       return store.song.findMany();
     },
     user: isAuthenticated((root, args, { user }) => {
-      console.log(`resolver檔: ${user.name}`);
       return store.user.findUnique({ where: { id: user.id } });
     }),
   },
   Mutation: {
     signUp: async (root, { name, email, password }) => {
-      // 1. Check if the email has been registered before.
-      const isUserEmailDuplicate = await store.user.findFirst({
-        where: { email },
-      });
-      if (isUserEmailDuplicate) {
-        throw new Error(
-          "That email address is already in use, please use a different email address."
-        );
-      }
+      try {
+        // Check if the email has been registered before.
+        const isUserEmailDuplicate = await store.user.findFirst({
+          where: { email },
+        });
+        if (isUserEmailDuplicate) {
+          throw new Error(
+            "That email address is already in use, please use a different email address."
+          );
+        }
 
-      // 2. Encrypt(加密) the password before storing it.
-      const hashedPassword = await hash(password, SALT_ROUNDS);
-      // 3. Create new user
-      return store.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-        },
-      });
+        // Encrypt(加密) the password before storing it.
+        const hashedPassword = await hash(password, SALT_ROUNDS);
+
+        // Create new user
+        const newUser = await store.user.create({
+          data: {
+            name,
+            email,
+            password: hashedPassword,
+          },
+        });
+
+        // Generate a token for the new user
+        newUser.token = createToken(newUser);
+        return {
+          success: true,
+          message: null,
+          user: newUser,
+        };
+      } catch (error) {
+        return { success: false, message: error };
+      }
     },
 
     login: async (root, { email, password }) => {
@@ -70,7 +82,7 @@ module.exports = {
         if (!passwordIsValid) throw new Error("Wrong Password");
 
         // 3. Return a token if successful.
-        const token = await createToken(user);
+        const token = createToken(user);
         user.token = token;
         return { success: true, message: `Successfully login!`, user };
       } catch (error) {

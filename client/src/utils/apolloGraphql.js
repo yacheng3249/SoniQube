@@ -27,11 +27,16 @@ export const GET_songs = gql`
 `;
 
 export const SIGNUP_MUTATION = gql`
-  mutation SignUp($name: String!, $email: String!, $password: String!) {
+  mutation signUp($name: String, $email: String!, $password: String!) {
     signUp(name: $name, email: $email, password: $password) {
-      id
-      name
-      email
+      success
+      message
+      user {
+        id
+        name
+        email
+        token
+      }
     }
   }
 `;
