@@ -8,17 +8,31 @@ datasource db {
 }
 
 model Song {
-  id     Int     @id @default(autoincrement())
+  id     String  @id @default(uuid())
   name   String
   artist String
   cover  String
-  active Boolean @default(false)
+  active Boolean
   audio  String
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(uuid())
   name     String
-  email    String
+  email    String  @unique
   password String
+  songs    UserSong[]
+}
+
+model UserSong {
+  id     String  @id @default(uuid())
+  user   User    @relation(fields: [userId], references: [id])
+  userId String
+  name   String
+  artist String
+  cover  String
+  active Boolean
+  audio  String
+
+  @@map("user_songs")
 }

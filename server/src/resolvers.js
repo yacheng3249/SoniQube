@@ -25,11 +25,11 @@ const isAuthenticated = (resolverFunc) => (parent, args, context) => {
 module.exports = {
   Query: {
     song: async (_, { id }) => {
-      return store.song.findUnique({ where: { id } });
+      return store.userSong.findUnique({ where: { id } });
     },
-    songs: async () => {
-      return store.song.findMany();
-    },
+    songs: isAuthenticated((_, args, { user }) => {
+      return store.userSong.findMany({ where: { userId: user.id } });
+    }),
     user: isAuthenticated((root, args, { user }) => {
       return store.user.findUnique({ where: { id: user.id } });
     }),

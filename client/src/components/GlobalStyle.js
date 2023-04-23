@@ -29,7 +29,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   h1, h2 {
-    color: rgb(54, 54, 54);
+    color: rgb(65, 65, 65);
   }
 
   h3, h4 {

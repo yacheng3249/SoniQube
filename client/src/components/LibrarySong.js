@@ -19,8 +19,10 @@ const LibrarySong = ({ audioRef }) => {
   };
 
   const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
+    fetchPolicy: "network-only",
     onError(error) {
       console.log(error);
+      return null;
     },
   });
   const songs = songsData?.songs;

@@ -3,17 +3,22 @@ import data from "../data.js";
 import { persist } from "zustand/middleware";
 
 const initialState = {
-  currentSong: data()[0],
-  // currentSong: null,
-  currentId: 2,
+  currentSong: null,
+  currentSongId: null,
 };
 
 const changeState = (set, get) => ({
   setCurrentId: (song) => {
-    set(() => ({ currentId: song.id }));
+    set(() => ({ currentSongId: song.id }));
   },
   setCurrentSong: (song) => {
     set(() => ({ currentSong: song }));
+  },
+  removeCurrentSong: () => {
+    return new Promise((resolve) => {
+      set({ currentSong: initialState.currentSong });
+      return resolve(200);
+    });
   },
   // setCurrentSong: (song) => {
   //   let selectedSong;
@@ -61,15 +66,15 @@ const changeState = (set, get) => ({
 });
 
 const useCurrentSongStore = create(
-  persist(
-    (set, get) => ({
-      ...initialState,
-      ...changeState(set, get),
-    }),
-    {
-      name: "songs-store",
-    }
-  )
+  // persist(
+  (set, get) => ({
+    ...initialState,
+    ...changeState(set, get),
+  }),
+  {
+    name: "songs-store",
+  }
+  // )
 );
 
 export default useCurrentSongStore;

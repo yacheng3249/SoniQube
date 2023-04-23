@@ -1,6 +1,6 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMusic, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
 import useSignInStore from "../zustand/useSignInStore";
@@ -14,16 +14,12 @@ const Nav = React.memo(() => {
   return (
     <StyleNav>
       <h1>
-        <Link to="/">
-          <FontAwesomeIcon icon={faMusic} />
-        </Link>
+        <Link to="/">SoniQube</Link>
       </h1>
       <div>
-        <button>
-          <Link to="/login">
-            <FontAwesomeIcon size="1x" icon={faUser} />
-          </Link>
-        </button>
+        <Link to="/login">
+          <FontAwesomeIcon size="2x" icon={faUserCircle} />
+        </Link>
         <button onClick={() => setLibraryStatus()}>Library</button>
       </div>
     </StyleNav>
@@ -32,11 +28,25 @@ const Nav = React.memo(() => {
 
 const StyleNav = styled.div`
   min-height: 10vh;
+  width: 60%;
+  margin: 0 auto;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  h1 {
+    font-size: 24px;
+    a {
+      color: rgb(65, 65, 65);
+      text-decoration: none;
+    }
+  }
+  div {
+    display: flex;
+    align-items: center;
+  }
   button {
     background: transparent;
+    color: rgb(65, 65, 65);
     cursor: pointer;
     border: 2px solid rgb(65, 65, 65);
     padding: 0.5rem;
@@ -45,6 +55,10 @@ const StyleNav = styled.div`
   button:hover {
     background: rgb(65, 65, 65);
     color: white;
+  }
+  svg {
+    margin-right: 1rem;
+    color: rgb(65, 65, 65);
   }
   @media screen and (max-width: 768px) {
     button {

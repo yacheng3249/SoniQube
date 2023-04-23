@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_song = gql`
-  query Song($songId: Int) {
+  query Song($songId: String) {
     song(id: $songId) {
       id
       name

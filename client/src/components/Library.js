@@ -2,14 +2,26 @@ import React from "react";
 import styled from "styled-components";
 import LibrarySong from "./LibrarySong";
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
+import useSignInStore from "../zustand/useSignInStore";
+import useCurrentSongStore from "../zustand/useCurrentSongStore";
 
 const Library = ({ audioRef }) => {
   const { libraryStatus } = useLibraryStatusStore();
+  const { token } = useSignInStore();
+  const { currentSong } = useCurrentSongStore();
 
   return (
     <StyleLibrary className={`${libraryStatus ? "active-library" : ""}`}>
       <h2>Library</h2>
-      <LibrarySong audioRef={audioRef} />
+      {token ? (
+        currentSong ? (
+          <LibrarySong audioRef={audioRef} />
+        ) : (
+          <h2>Empty</h2>
+        )
+      ) : (
+        <h2>please log in</h2>
+      )}
     </StyleLibrary>
   );
 };

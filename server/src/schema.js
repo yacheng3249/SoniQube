@@ -2,7 +2,7 @@ const { gql } = require("../node_modules/apollo-server");
 
 const typeDefs = gql`
   type Query {
-    song(id: Int): Song
+    song(id: String): Song
     songs: [Song]
     user: User
   }
@@ -15,7 +15,7 @@ const typeDefs = gql`
   }
 
   type Song {
-    id: Int
+    id: String
     name: String
     artist: String
     cover: String
@@ -24,10 +24,11 @@ const typeDefs = gql`
   }
 
   type User {
-    id: Int
-    email: String
+    id: String
     name: String
+    email: String
     token: String
+    songs: [Song]
   }
 
   type Response {

@@ -7,7 +7,7 @@ function chillHop() {
       artist: "Blue Wednesday, Shopan",
       cover:
         "https://chillhop.com/wp-content/uploads/2020/12/33a2a875828118a3ff260638a88362936104879a-1024x1024.jpg",
-      id: 2,
+      id: "76e4bce0-e103-11ed-8688-9c5c8e07c98f",
       active: true,
       // color: ["#007cba", "#005a87"],
       audio: "https://mp3.chillhop.com/serve.php/?mp3=11227",
