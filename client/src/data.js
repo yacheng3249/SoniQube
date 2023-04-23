@@ -62,16 +62,6 @@ function chillHop() {
       // color: ["#007cba", "#005a87"],
       audio: "https://mp3.chillhop.com/serve.php/?mp3=11225",
     },
-    {
-      name: "vhs tapes 1993-1996",
-      artist: "Sundreamer, edapollo",
-      cover:
-        "https://chillhop.com/wp-content/uploads/2021/02/08cbb0848f669e1bd8b5a5152c4b7d20edf1b499-1024x1024.jpg",
-      id: uuidv4(),
-      active: false,
-      // color: ["#007cba", "#005a87"],
-      audio: "https://mp3.chillhop.com/serve.php/?mp3=9335",
-    },
   ];
 }
 
