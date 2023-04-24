@@ -6,6 +6,7 @@ const initialState = {
   currentSong: null,
   currentSongId: null,
   selectedDeleteSong: null,
+  songs: [],
 };
 
 const changeState = (set, get) => ({
@@ -24,6 +25,12 @@ const changeState = (set, get) => ({
   setSelectedDeleteSong: (song) => {
     return new Promise((resolve) => {
       set(() => ({ selectedDeleteSong: song }));
+      return resolve(200);
+    });
+  },
+  setSongs: (songs) => {
+    return new Promise((resolve) => {
+      set(() => ({ songs }));
       return resolve(200);
     });
   },

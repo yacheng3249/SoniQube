@@ -12,21 +12,22 @@ import { Link } from "react-router-dom";
 
 const Home = ({ audioRef }) => {
   const { token } = useSignInStore();
-  const { currentSong, setCurrentSong } = useCurrentSongStore();
+  const { currentSong, setCurrentSong, setSongs } = useCurrentSongStore();
   const { dialogStatus } = useDialogStatusStore();
 
-  const { data, loading, refetch } = useQuery(GET_songs, {
-    fetchPolicy: "network-only",
-    skip: !token,
-    onCompleted({ songs }) {
-      if (!currentSong) {
-        setCurrentSong(songs[0]);
-      }
-    },
-    onError(error) {
-      return null;
-    },
-  });
+  // const { data, loading, refetch } = useQuery(GET_songs, {
+  //   fetchPolicy: "network-only",
+  //   skip: !token,
+  //   onCompleted({ songs }) {
+  //     setSongs(songs);
+  //     if (!currentSong) {
+  //       setCurrentSong(songs[0]);
+  //     }
+  //   },
+  //   onError(error) {
+  //     return null;
+  //   },
+  // });
 
   return (
     <>
@@ -35,7 +36,7 @@ const Home = ({ audioRef }) => {
           <>
             <Song />
             <Player audioRef={audioRef} />
-            {dialogStatus ? <ConfirmationDialog refetch={refetch} /> : ""}
+            {/* {dialogStatus ? <ConfirmationDialog refetch={refetch} /> : ""} */}
           </>
         ) : (
           <HomeWrapper>

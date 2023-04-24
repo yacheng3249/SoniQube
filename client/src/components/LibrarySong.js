@@ -11,7 +11,7 @@ import { GET_songs } from "../utils/apolloGraphql";
 
 const LibrarySong = ({ audioRef }) => {
   // const { songs, setCurrentSong } = useCurrentSongStore();
-  const { currentSong, setCurrentSong, setSelectedDeleteSong } =
+  const { currentSong, setCurrentSong, setSelectedDeleteSong, songs } =
     useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
   const { setDialogStatusActive, setDialogContent } = useDialogStatusStore();
@@ -32,37 +32,36 @@ const LibrarySong = ({ audioRef }) => {
     setDialogStatusActive();
   };
 
-  const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
-    fetchPolicy: "network-only",
-    onError(error) {
-      console.log(error);
-      return null;
-    },
-  });
-  const songs = songsData?.songs;
+  // const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
+  //   fetchPolicy: "network-only",
+  //   onError(error) {
+  //     console.log(error);
+  //     return null;
+  //   },
+  // });
+  // const songs = songsData?.songs;
 
   return (
     <div>
-      {!get_songs_loading &&
-        songs.map((song) => (
-          <LibrarySongs
-            key={song.id}
-            className={`${song.id === currentSong.id ? "selected" : ""}`}
-            onClick={() => songSelectHandler(song)}
-          >
-            <img src={song.cover} alt={song.name} />
-            <SongDescription>
-              <h3>{song.name}</h3>
-              <h4>{song.artist}</h4>
-            </SongDescription>
-            <FontAwesomeIcon
-              size="1x"
-              className="button-sm"
-              icon={faTrash}
-              onClick={() => songDeleteHandler(song)}
-            />
-          </LibrarySongs>
-        ))}
+      {songs.map((song) => (
+        <LibrarySongs
+          key={song.id}
+          className={`${song.id === currentSong.id ? "selected" : ""}`}
+          onClick={() => songSelectHandler(song)}
+        >
+          <img src={song.cover} alt={song.name} />
+          <SongDescription>
+            <h3>{song.name}</h3>
+            <h4>{song.artist}</h4>
+          </SongDescription>
+          <FontAwesomeIcon
+            size="1x"
+            className="button-sm"
+            icon={faTrash}
+            onClick={() => songDeleteHandler(song)}
+          />
+        </LibrarySongs>
+      ))}
     </div>
   );
 };

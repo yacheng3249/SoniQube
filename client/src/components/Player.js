@@ -18,8 +18,7 @@ import { GET_song, GET_songs } from "../utils/apolloGraphql";
 const Player = ({ audioRef }) => {
   // const { currentSong, setCurrentSongForward, setCurrentSongBack } =
   //   useCurrentSongStore();
-  const { currentId, setCurrentId, currentSong, setCurrentSong } =
-    useCurrentSongStore();
+  const { currentSong, setCurrentSong, songs } = useCurrentSongStore();
   const { isPlaying, setPlayingStatus } = usePlayingStatusStore();
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
@@ -59,24 +58,15 @@ const Player = ({ audioRef }) => {
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  const { data: songData, loading: get_song_loading } = useQuery(GET_song, {
-    variables: {
-      songId: currentId,
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
-
-  const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
-    fetchPolicy: "network-only",
-    onError(error) {
-      console.log(error);
-      return null;
-    },
-  });
-  // const currentSong = songData?.song;
-  const songs = songsData?.songs;
+  // const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
+  //   fetchPolicy: "network-only",
+  //   onError(error) {
+  //     console.log(error);
+  //     return null;
+  //   },
+  // });
+  // // const currentSong = songData?.song;
+  // const songs = songsData?.songs;
 
   const skipTrackHandler = (direction, currentSong) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
@@ -92,7 +82,6 @@ const Player = ({ audioRef }) => {
       // setCurrentId(songs[preIndex]);
       setCurrentSong(songs[preIndex]);
     }
-    console.log(audioRef.current);
     playAudio(isPlaying, audioRef);
   };
 
@@ -105,9 +94,6 @@ const Player = ({ audioRef }) => {
 
   return (
     <>
-      {/* {get_songs_loading ? (
-        <p>Loading...</p>
-      ) : ( */}
       <PlayerContainer>
         <TimeControl>
           <div className="time">
@@ -172,7 +158,6 @@ const Player = ({ audioRef }) => {
           </IconButton>
         </PlayControl>
       </PlayerContainer>
-      {/* )} */}
       <audio
         ref={audioRef}
         src={currentSong.audio}

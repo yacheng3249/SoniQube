@@ -5,10 +5,14 @@ import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import { useMutation } from "@apollo/client";
 import { delete_song } from "../utils/apolloGraphql";
 
-const ConfirmationDialog = ({ refetch }) => {
+const ConfirmationDialog = ({ refetch, data }) => {
   const { dialogContent, setDialogStatusInactive } = useDialogStatusStore();
-  const { selectedDeleteSong, setSelectedDeleteSong } = useCurrentSongStore();
-  console.log(selectedDeleteSong.id);
+  const {
+    currentSong,
+    setCurrentSong,
+    selectedDeleteSong,
+    setSelectedDeleteSong,
+  } = useCurrentSongStore();
 
   const [delete_Song_Fn, { loading }] = useMutation(delete_song, {
     onCompleted({ deleteSong }) {
@@ -60,14 +64,19 @@ const DialogOverlay = styled.div`
 `;
 
 const Dialog = styled.div`
-  background-color: #fff;
+  background-color: rgb(65, 65, 65);
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  opacity: 0.8;
+  opacity: 1;
   h2 {
     margin-top: 0;
     font-size: 18px;
+    color: white;
+  }
+  p {
+    color: white;
+    font-size: 12px;
   }
 `;
 
