@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 const initialState = {
   currentSong: null,
   currentSongId: null,
+  selectedDeleteSong: null,
 };
 
 const changeState = (set, get) => ({
@@ -17,6 +18,12 @@ const changeState = (set, get) => ({
   removeCurrentSong: () => {
     return new Promise((resolve) => {
       set({ currentSong: initialState.currentSong });
+      return resolve(200);
+    });
+  },
+  setSelectedDeleteSong: (song) => {
+    return new Promise((resolve) => {
+      set(() => ({ selectedDeleteSong: song }));
       return resolve(200);
     });
   },

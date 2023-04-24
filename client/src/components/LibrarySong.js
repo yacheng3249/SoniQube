@@ -1,21 +1,35 @@
 import React from "react";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
+import useDialogStatusStore from "../zustand/useDialogStatusStore";
 import { playAudio } from "../utils";
 import { useQuery } from "@apollo/client";
 import { GET_songs } from "../utils/apolloGraphql";
 
 const LibrarySong = ({ audioRef }) => {
   // const { songs, setCurrentSong } = useCurrentSongStore();
-  const { currentSong, setCurrentSong } = useCurrentSongStore();
+  const { currentSong, setCurrentSong, setSelectedDeleteSong } =
+    useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
+  const { setDialogStatusActive, setDialogContent } = useDialogStatusStore();
 
   const songSelectHandler = async (song) => {
     setCurrentSong(song);
     // setCurrentId(song);
     //Check if the song is playing
     playAudio(isPlaying, audioRef);
+  };
+
+  const songDeleteHandler = async (song) => {
+    setSelectedDeleteSong(song);
+    setDialogContent(
+      "Are you sure you want to delete?",
+      `${song.artist} - ${song.name}`
+    );
+    setDialogStatusActive();
   };
 
   const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
@@ -33,7 +47,6 @@ const LibrarySong = ({ audioRef }) => {
         songs.map((song) => (
           <LibrarySongs
             key={song.id}
-            // className={`${song.active ? "selected" : ""}`}
             className={`${song.id === currentSong.id ? "selected" : ""}`}
             onClick={() => songSelectHandler(song)}
           >
@@ -42,6 +55,12 @@ const LibrarySong = ({ audioRef }) => {
               <h3>{song.name}</h3>
               <h4>{song.artist}</h4>
             </SongDescription>
+            <FontAwesomeIcon
+              size="1x"
+              className="button-sm"
+              icon={faTrash}
+              onClick={() => songDeleteHandler(song)}
+            />
           </LibrarySongs>
         ))}
     </div>

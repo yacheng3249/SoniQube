@@ -112,10 +112,10 @@ module.exports = {
 
     deleteSong: isAuthenticated(async (_, { id }) => {
       try {
-        await store.song.delete({
+        await store.userSong.delete({
           where: { id },
         });
-        return { success: true, message: `Song(id: ${id}) has been deleted.` };
+        return { success: true, message: `The song has been deleted.` };
       } catch (error) {
         return { success: false, message: error };
       }

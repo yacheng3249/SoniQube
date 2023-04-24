@@ -11,7 +11,7 @@ const typeDefs = gql`
     signUp(name: String, email: String!, password: String!): UserResponse
     login(email: String!, password: String!): UserResponse
     updateUserInfo(userUpdateInput: UserUpdateInput): User
-    deleteSong(id: Int): Response!
+    deleteSong(id: String): Response!
   }
 
   type Song {
@@ -37,11 +37,8 @@ const typeDefs = gql`
   }
 
   type UserResponse {
-    "成功"
     success: Boolean!
-    "訊息"
     message: String
-    "會員"
     user: User
   }
 

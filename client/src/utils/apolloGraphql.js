@@ -65,3 +65,12 @@ export const GET_user = gql`
     }
   }
 `;
+
+export const delete_song = gql`
+  mutation deleteSong($songId: String) {
+    deleteSong(id: $songId) {
+      success
+      message
+    }
+  }
+`;

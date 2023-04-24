@@ -7,7 +7,6 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
     scrollbar-width: thin;
     scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
-    background-color: var(--bg); 
   }
 
   :root {
@@ -101,6 +100,10 @@ const GlobalStyles = createGlobalStyle`
   .spin-pause {
     animation-play-state: paused;
     animation-fill-mode: forwards;
+  }
+
+  .open {
+    display: flex;
   }
   
 `;
