@@ -1,18 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import useDialogStatusStore from "../zustand/useDialogStatusStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import { useMutation } from "@apollo/client";
 import { delete_song } from "../utils/apolloGraphql";
 
-const ConfirmationDialog = ({ refetch, data }) => {
+const ConfirmationDialog = ({ refetch }) => {
   const { dialogContent, setDialogStatusInactive } = useDialogStatusStore();
-  const {
-    currentSong,
-    setCurrentSong,
-    selectedDeleteSong,
-    setSelectedDeleteSong,
-  } = useCurrentSongStore();
+  const { selectedDeleteSong, setSelectedDeleteSong } = useCurrentSongStore();
 
   const [delete_Song_Fn, { loading }] = useMutation(delete_song, {
     onCompleted({ deleteSong }) {
@@ -46,8 +41,8 @@ const ConfirmationDialog = ({ refetch, data }) => {
         <h2>{dialogContent.title}</h2>
         <p>{dialogContent.message}</p>
         <DialogButtons>
-          <button onClick={handleConfirm}>Confirm</button>
           <button onClick={handleCancel}>Cancel</button>
+          <button onClick={handleConfirm}>Confirm</button>
         </DialogButtons>
       </Dialog>
     </DialogOverlay>

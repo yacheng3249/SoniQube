@@ -12,6 +12,7 @@ const typeDefs = gql`
     login(email: String!, password: String!): UserResponse
     updateUserInfo(userUpdateInput: UserUpdateInput): User
     deleteSong(id: String): Response!
+    addSong(songInput: SongInput!): Song
   }
 
   type Song {
@@ -45,6 +46,16 @@ const typeDefs = gql`
   input UserUpdateInput {
     name: String
     password: String
+  }
+
+  input SongInput {
+    id: String
+    name: String
+    artist: String
+    cover: String
+    active: Boolean
+    audio: String
+    userId: String
   }
 `;
 

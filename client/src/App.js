@@ -27,6 +27,7 @@ function App() {
 
   const { data, loading, refetch } = useQuery(GET_songs, {
     fetchPolicy: "network-only",
+    nextFetchPolicy: "network-only",
     skip: !token,
     onCompleted({ songs }) {
       setSongs(songs);

@@ -120,5 +120,23 @@ module.exports = {
         return { success: false, message: error };
       }
     }),
+
+    addSong: isAuthenticated(async (_, { songInput }, { user }) => {
+      try {
+        const { name, artist, cover, active, audio } = songInput;
+        return store.userSong.create({
+          data: {
+            userId: user.id,
+            name,
+            artist,
+            cover,
+            active,
+            audio,
+          },
+        });
+      } catch (error) {
+        throw new Error(error);
+      }
+    }),
   },
 };

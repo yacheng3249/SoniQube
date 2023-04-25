@@ -71,7 +71,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   .selected {
-    background: rgb(165, 181, 228);
+    background: var(--prog);
   }
 
   .active-library {

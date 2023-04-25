@@ -47,13 +47,14 @@ const LibrarySong = ({ audioRef }) => {
         <LibrarySongs
           key={song.id}
           className={`${song.id === currentSong.id ? "selected" : ""}`}
-          onClick={() => songSelectHandler(song)}
         >
-          <img src={song.cover} alt={song.name} />
-          <SongDescription>
-            <h3>{song.name}</h3>
-            <h4>{song.artist}</h4>
-          </SongDescription>
+          <div onClick={() => songSelectHandler(song)}>
+            <img src={song.cover} alt={song.name} />
+            <SongDescription>
+              <h3>{song.name}</h3>
+              <h4>{song.artist}</h4>
+            </SongDescription>
+          </div>
           <FontAwesomeIcon
             size="1x"
             className="button-sm"
@@ -72,8 +73,11 @@ const LibrarySongs = styled.div`
   padding: 1rem 2rem;
   cursor: pointer;
   transition: background 0.5s ease;
-  img {
-    width: 30%;
+  div {
+    display: flex;
+    img {
+      width: 30%;
+    }
   }
   &:hover {
     background: rgb(197, 212, 243);
@@ -81,6 +85,9 @@ const LibrarySongs = styled.div`
 `;
 
 const SongDescription = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-left: 1rem;
   h3 {
     font-size: 1rem;
