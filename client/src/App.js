@@ -49,7 +49,7 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/registration" element={<SignUp />} />
       </Routes>
-      <Library audioRef={audioRef} />
+      <Library audioRef={audioRef} refetch={refetch} />
       {dialogStatus ? <ConfirmationDialog refetch={refetch} /> : ""}
     </StyleApp>
   );

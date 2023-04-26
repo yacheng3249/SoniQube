@@ -74,3 +74,16 @@ export const delete_song = gql`
     }
   }
 `;
+
+export const add_song = gql`
+  mutation addSong($songInput: SongInput!) {
+    addSong(songInput: $songInput) {
+      id
+      name
+      artist
+      cover
+      active
+      audio
+    }
+  }
+`;

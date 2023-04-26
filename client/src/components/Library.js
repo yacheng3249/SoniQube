@@ -1,26 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import LibrarySong from "./LibrarySong";
+import SearchedSong from "./SearchedSong";
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
 import useSignInStore from "../zustand/useSignInStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 
-const Library = ({ audioRef }) => {
+const Library = ({ audioRef, refetch }) => {
   const { libraryStatus } = useLibraryStatusStore();
   const { token } = useSignInStore();
   const { currentSong } = useCurrentSongStore();
+  const [textInput, setTextInput] = useState("");
+
+  const inputHandler = (e) => {
+    setTextInput(e.target.value);
+  };
 
   return (
     <StyleLibrary className={`${libraryStatus ? "active-library" : ""}`}>
+      <form className="search">
+        <div style={{ position: "relative" }}>
+          <input type="text" onChange={inputHandler} value={textInput} />
+          <button
+            style={{ position: "absolute", right: 0 }}
+            onClick={() => setTextInput("")}
+          >
+            X
+          </button>
+        </div>
+        <button>
+          <FontAwesomeIcon icon={faSearch} />
+        </button>
+      </form>
       <h2>Library</h2>
-      {token ? (
+      {!textInput ? (
         currentSong ? (
           <LibrarySong audioRef={audioRef} />
         ) : (
           <h2>Empty</h2>
         )
       ) : (
-        <h2>please log in</h2>
+        // <h2>please log in</h2>
+        <SearchedSong textInput={textInput} refetch={refetch} />
       )}
     </StyleLibrary>
   );

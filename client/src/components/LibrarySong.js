@@ -6,11 +6,8 @@ import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 import useDialogStatusStore from "../zustand/useDialogStatusStore";
 import { playAudio } from "../utils";
-import { useQuery } from "@apollo/client";
-import { GET_songs } from "../utils/apolloGraphql";
 
 const LibrarySong = ({ audioRef }) => {
-  // const { songs, setCurrentSong } = useCurrentSongStore();
   const { currentSong, setCurrentSong, setSelectedDeleteSong, songs } =
     useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
@@ -18,8 +15,6 @@ const LibrarySong = ({ audioRef }) => {
 
   const songSelectHandler = async (song) => {
     setCurrentSong(song);
-    // setCurrentId(song);
-    //Check if the song is playing
     playAudio(isPlaying, audioRef);
   };
 
@@ -31,15 +26,6 @@ const LibrarySong = ({ audioRef }) => {
     );
     setDialogStatusActive();
   };
-
-  // const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
-  //   fetchPolicy: "network-only",
-  //   onError(error) {
-  //     console.log(error);
-  //     return null;
-  //   },
-  // });
-  // const songs = songsData?.songs;
 
   return (
     <div>
