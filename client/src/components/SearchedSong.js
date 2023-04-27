@@ -32,7 +32,7 @@ const SearchedSong = ({ textInput, refetch }) => {
   });
 
   const songAddHandler = (song) => {
-    const { name, artist_name, image, audiodownload } = song;
+    const { name, artist_name, image, audio } = song;
     add_Song_Fn({
       variables: {
         songInput: {
@@ -40,7 +40,7 @@ const SearchedSong = ({ textInput, refetch }) => {
           artist: artist_name,
           cover: image,
           active: false,
-          audio: audiodownload,
+          audio,
         },
       },
     });

@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 // memo avoids this component keeping re-rendering when is unnecessary during parent component is re-rendering
 const Nav = React.memo(() => {
   const { setLibraryStatus } = useLibraryStatusStore();
-  const { setSignInActive, setInActive } = useSignInStore();
 
   return (
     <StyleNav>
@@ -61,6 +60,8 @@ const StyleNav = styled.div`
     color: rgb(65, 65, 65);
   }
   @media screen and (max-width: 768px) {
+    width: 90%;
+    justify-content: space-between;
     button {
       z-index: 10;
     }

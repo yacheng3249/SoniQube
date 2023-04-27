@@ -5,8 +5,6 @@ import SearchedSong from "./SearchedSong";
 import useLibraryStatusStore from "../zustand/useLibraryStatusStore";
 import useSignInStore from "../zustand/useSignInStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const Library = ({ audioRef, refetch }) => {
   const { libraryStatus } = useLibraryStatusStore();
@@ -20,19 +18,13 @@ const Library = ({ audioRef, refetch }) => {
 
   return (
     <StyleLibrary className={`${libraryStatus ? "active-library" : ""}`}>
-      <form className="search">
-        <div style={{ position: "relative" }}>
-          <input type="text" onChange={inputHandler} value={textInput} />
-          <button
-            style={{ position: "absolute", right: 0 }}
-            onClick={() => setTextInput("")}
-          >
-            X
-          </button>
-        </div>
-        <button>
-          <FontAwesomeIcon icon={faSearch} />
-        </button>
+      <form>
+        <StyledInput
+          type="search"
+          placeholder="Search for songs"
+          onChange={inputHandler}
+          value={textInput}
+        />
       </form>
       <h2>Library</h2>
       {!textInput ? (
@@ -66,6 +58,21 @@ const StyleLibrary = styled.div`
   }
   @media screen and (max-width: 768px) {
     width: 100%;
+  }
+`;
+
+const StyledInput = styled.input`
+  border: none;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  position: relative;
+
+  &::placeholder {
+    color: #aaa;
   }
 `;
 

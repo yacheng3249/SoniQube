@@ -90,13 +90,18 @@ const ImageWrapper = styled.div`
     aspect-ratio: 1 / 1;
     // filter: grayscale(100%) sepia(30%) hue-rotate(180deg);
   }
+
+  @media screen and (max-width: 768px) {
+    img {
+      width: 80%;
+    }
+  }
 `;
 
 const ButtonWrapper = styled.div`
   width: 50%;
   min-height: 20vh;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
 
@@ -112,6 +117,15 @@ const ButtonWrapper = styled.div`
 
     &:hover {
       background-color: #2c3e50;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    button {
+      padding: 0;
+      width: 200px;
+      height: 40px;
     }
   }
 `;

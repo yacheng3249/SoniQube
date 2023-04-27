@@ -3,10 +3,12 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const store = new PrismaClient();
+const axios = require("axios");
+const fs = require("fs");
 // Define the number of saltRounds required for bcrypt encryption.
 const SALT_ROUNDS = Number(process.env.SALT_ROUNDS);
 // Define the secret required for JWT (JSON Web Token) authentication.
-const SECRET = process.env.SECRET;
+const SECRET = process.env.JWT_SECRET;
 
 // helper functions
 const hash = (text) => bcrypt.hash(text, SALT_ROUNDS);
@@ -38,7 +40,7 @@ module.exports = {
     signUp: async (root, { name, email, password }) => {
       try {
         // Check if the email has been registered before.
-        const isUserEmailDuplicate = await store.user.findFirst({
+        const isUserEmailDuplicate = await store.user.findUnique({
           where: { email },
         });
         if (isUserEmailDuplicate) {
@@ -124,6 +126,22 @@ module.exports = {
     addSong: isAuthenticated(async (_, { songInput }, { user }) => {
       try {
         const { name, artist, cover, active, audio } = songInput;
+        // // Download MP3 file.
+        // const response = await axios({
+        //   url: audio,
+        //   method: "GET",
+        //   responseType: "stream",
+        // });
+        // const fileName = name.replace(/\s+/g, "_");
+        // const filePath = `${fileName}.mp3`;
+        // // Create a writable stream to write music data to a file.
+        // const writer = fs.createWriteStream(filePath);
+        // response.data.pipe(writer);
+        // await new Promise((resolve, reject) => {
+        //   writer.on("finish", resolve);
+        //   writer.on("error", reject);
+        // });
+
         return store.userSong.create({
           data: {
             userId: user.id,

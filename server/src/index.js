@@ -9,7 +9,7 @@ const server = new ApolloServer({
   resolvers,
   context: async ({ req }) => {
     const context = {
-      secret: process.env.SECRET,
+      secret: process.env.JWT_SECRET,
       saltRounds: Number(process.env.SALT_ROUNDS),
     };
     const token = req.headers.authorization;

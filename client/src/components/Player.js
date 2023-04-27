@@ -23,6 +23,7 @@ const Player = ({ audioRef }) => {
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
+    animationPercentage: 0,
   });
 
   //Event Handlers
@@ -40,10 +41,15 @@ const Player = ({ audioRef }) => {
   const timeUpdateHandler = (e) => {
     const current = e.target.currentTime;
     const duration = e.target.duration;
+
+    const roundedCurrent = Math.round(current);
+    const roundedDuration = Math.round(duration);
+    const percentage = Math.round((roundedCurrent / roundedDuration) * 100);
     setSongInfo({
       ...songInfo,
       currentTime: current,
       duration,
+      animationPercentage: percentage,
     });
   };
 
@@ -92,6 +98,10 @@ const Player = ({ audioRef }) => {
     playAudio(isPlaying, audioRef);
   };
 
+  const trackAnim = {
+    transform: `translateX(${songInfo.animationPercentage}%)`,
+  };
+
   return (
     <>
       <PlayerContainer>
@@ -113,12 +123,7 @@ const Player = ({ audioRef }) => {
               onChange={dragHandler}
               type="range"
             />
-            <div
-              style={{
-                transform: `translateX(50%)`,
-              }}
-              className="animate-track"
-            ></div>
+            <div style={trackAnim} className="animate-track"></div>
           </div>
         </TimeControl>
         <PlayControl>
