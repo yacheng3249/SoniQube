@@ -20,7 +20,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const token = useSignInStore.getState().token;
-  console.log("index:" + token);
+  // console.log(process.env);
   return {
     headers: {
       ...headers,
@@ -48,7 +48,9 @@ root.render(
 );
 // ReactDOM.render(
 //   <ApolloProvider client={client}>
-//     <App />
+//     <BrowserRouter>
+//       <App />
+//     </BrowserRouter>
 //   </ApolloProvider>,
 //   document.getElementById("root")
 // );

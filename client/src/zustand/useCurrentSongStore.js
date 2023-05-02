@@ -1,30 +1,21 @@
 import { create } from "zustand";
-import data from "../data.js";
 import { persist } from "zustand/middleware";
 
 const initialState = {
   currentSong: null,
-  currentSongId: null,
-  selectedDeleteSong: null,
   songs: [],
 };
 
-const changeState = (set, get) => ({
-  setCurrentId: (song) => {
-    set(() => ({ currentSongId: song.id }));
-  },
+const changeState = (set) => ({
   setCurrentSong: (song) => {
-    set(() => ({ currentSong: song }));
+    return new Promise((resolve) => {
+      set(() => ({ currentSong: song }));
+      return resolve(200);
+    });
   },
   removeCurrentSong: () => {
     return new Promise((resolve) => {
       set({ currentSong: initialState.currentSong });
-      return resolve(200);
-    });
-  },
-  setSelectedDeleteSong: (song) => {
-    return new Promise((resolve) => {
-      set(() => ({ selectedDeleteSong: song }));
       return resolve(200);
     });
   },

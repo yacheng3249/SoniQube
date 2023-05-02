@@ -4,30 +4,11 @@ import Song from "../components/Song";
 import Player from "../components/Player";
 import useSignInStore from "../zustand/useSignInStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
-import ConfirmationDialog from "../components/ConfirmationDialog";
-import useDialogStatusStore from "../zustand/useDialogStatusStore";
-import { useQuery } from "@apollo/client";
-import { GET_songs } from "../utils/apolloGraphql";
 import { Link } from "react-router-dom";
 
 const Home = ({ audioRef }) => {
   const { token } = useSignInStore();
-  const { currentSong, setCurrentSong, setSongs } = useCurrentSongStore();
-  const { dialogStatus } = useDialogStatusStore();
-
-  // const { data, loading, refetch } = useQuery(GET_songs, {
-  //   fetchPolicy: "network-only",
-  //   skip: !token,
-  //   onCompleted({ songs }) {
-  //     setSongs(songs);
-  //     if (!currentSong) {
-  //       setCurrentSong(songs[0]);
-  //     }
-  //   },
-  //   onError(error) {
-  //     return null;
-  //   },
-  // });
+  const { currentSong } = useCurrentSongStore();
 
   return (
     <>

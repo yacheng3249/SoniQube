@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlay,
@@ -12,14 +11,11 @@ import {
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 import { playAudio } from "../utils";
-import { useQuery } from "@apollo/client";
-import { GET_song, GET_songs } from "../utils/apolloGraphql";
 
 const Player = ({ audioRef }) => {
-  // const { currentSong, setCurrentSongForward, setCurrentSongBack } =
-  //   useCurrentSongStore();
   const { currentSong, setCurrentSong, songs } = useCurrentSongStore();
   const { isPlaying, setPlayingStatus } = usePlayingStatusStore();
+  const [isSongLoop, setSongLoopStatus] = useState(false);
   const [songInfo, setSongInfo] = useState({
     currentTime: 0,
     duration: 0,
@@ -28,7 +24,6 @@ const Player = ({ audioRef }) => {
 
   //Event Handlers
   const playSongHandler = () => {
-    console.log(audioRef.current);
     if (isPlaying) {
       audioRef.current.pause();
       setPlayingStatus();
@@ -64,17 +59,7 @@ const Player = ({ audioRef }) => {
     setSongInfo({ ...songInfo, currentTime: e.target.value });
   };
 
-  // const { data: songsData, loading: get_songs_loading } = useQuery(GET_songs, {
-  //   fetchPolicy: "network-only",
-  //   onError(error) {
-  //     console.log(error);
-  //     return null;
-  //   },
-  // });
-  // // const currentSong = songData?.song;
-  // const songs = songsData?.songs;
-
-  const skipTrackHandler = (direction, currentSong) => {
+  const skipTrackHandler = async (direction, currentSong) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (direction === "skip-forward") {
       // setCurrentId(songs[(currentIndex + 1) % songs.length]);
@@ -92,10 +77,15 @@ const Player = ({ audioRef }) => {
   };
 
   const songEndHandler = async () => {
-    const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-    // setCurrentId(songs[(currentIndex + 1) % songs.length]);
-    setCurrentSong(songs[(currentIndex + 1) % songs.length]);
-    playAudio(isPlaying, audioRef);
+    if (!isSongLoop) {
+      const currentIndex = songs.findIndex(
+        (song) => song.id === currentSong.id
+      );
+      setCurrentSong(songs[(currentIndex + 1) % songs.length]);
+      playAudio(isPlaying, audioRef);
+    } else {
+      playAudio(isPlaying, audioRef);
+    }
   };
 
   const trackAnim = {
@@ -104,18 +94,13 @@ const Player = ({ audioRef }) => {
 
   return (
     <>
-      <PlayerContainer>
-        <TimeControl>
+      <div className="player-container">
+        <div className="time-control">
           <div className="time">
             <p>{getTime(songInfo.currentTime)}</p>
             <p>{songInfo.duration ? getTime(songInfo.duration) : "0:00"}</p>
           </div>
-          <div
-            style={{
-              background: "linear-gradient(to rihgt, #007cba, #005a87)",
-            }}
-            className="track"
-          >
+          <div className="track">
             <input
               min={0}
               max={songInfo.duration || 0}
@@ -125,44 +110,40 @@ const Player = ({ audioRef }) => {
             />
             <div style={trackAnim} className="animate-track"></div>
           </div>
-        </TimeControl>
-        <PlayControl>
-          <IconButton>
-            <FontAwesomeIcon size="1x" className="button-sm" icon={faRandom} />
-          </IconButton>
-          <IconButtonMd>
+        </div>
+        <ul className="play-control">
+          <li className="icon-button sm">
+            <FontAwesomeIcon size="1x" icon={faRandom} />
+          </li>
+          <li className="icon-button md">
             <FontAwesomeIcon
               onClick={() => skipTrackHandler("skip-back", currentSong)}
-              className="skip-back"
               icon={faStepBackward}
             />
-          </IconButtonMd>
-          <IconButtonLg>
+          </li>
+          <li className="icon-button lg">
             <FontAwesomeIcon
               onClick={playSongHandler}
-              className="play"
               size="1x"
               icon={isPlaying ? faPause : faPlay}
             />
-          </IconButtonLg>
-
-          <IconButtonMd>
+          </li>
+          <li className="icon-button md">
             <FontAwesomeIcon
               onClick={() => skipTrackHandler("skip-forward", currentSong)}
-              className="skip-forward"
               icon={faStepForward}
             />
-          </IconButtonMd>
-
-          <IconButton>
+          </li>
+          <li className="icon-button sm">
             <FontAwesomeIcon
+              onClick={() => setSongLoopStatus(!isSongLoop)}
               size="1x"
-              className="button-sm"
+              className={`${isSongLoop ? "button-active" : ""}`}
               icon={faCircleNotch}
             />
-          </IconButton>
-        </PlayControl>
-      </PlayerContainer>
+          </li>
+        </ul>
+      </div>
       <audio
         ref={audioRef}
         src={currentSong.audio}
@@ -173,85 +154,5 @@ const Player = ({ audioRef }) => {
     </>
   );
 };
-
-const PlayerContainer = styled.div`
-  min-height: 20vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const TimeControl = styled.div`
-  .time {
-    display: flex;
-    justify-content: space-between;
-    color: #a4b7be;
-    font-weight: bold;
-  }
-  width: 50%;
-  input {
-    width: 100%;
-    padding: 1rem 0rem;
-    -webkit-appearance: none;
-    background: transparent;
-    cursor: pointer;
-  }
-  p {
-    padding: 1rem;
-  }
-  @media screen and (max-width: 768px) {
-    width: 90%;
-  }
-`;
-
-const PlayControl = styled.div`
-  width: 30%;
-  margin: 3rem 0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  list-style: none;
-  color: #a4b7be;
-  svg {
-    cursor: pointer;
-  }
-  @media screen and (max-width: 768px) {
-    width: 60%;
-  }
-`;
-
-const IconButton = styled.li`
-  width: 2rem;
-  height: 2rem;
-  opacity: 0.75;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 5px 5px 10px #d4d4d4, -5px -5px 10px #ffffff;
-`;
-
-const IconButtonMd = styled.li`
-  width: 2.5rem;
-  height: 2.5rem;
-  opacity: 0.85;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 5px 5px 10px #d4d4d4, -5px -5px 10px #ffffff;
-`;
-
-const IconButtonLg = styled.li`
-  width: 3.25rem;
-  height: 3.25rem;
-  box-shadow: inset 6px 6px 12px #c8c8c8, inset -6px -6px 12px #ffffff;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 5px 5px 10px #d4d4d4, -5px -5px 10px #ffffff;
-`;
 
 export default Player;

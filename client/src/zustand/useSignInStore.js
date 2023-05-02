@@ -2,20 +2,10 @@ import { create } from "zustand";
 
 const initialState = {
   token: null,
-  // isSignIn: true,
 };
 
 const useSignInStore = create((set) => ({
   ...initialState,
-  // setSignInStatus: () => {
-  //   set((state) => ({ isSignIn: !state.isSignIn }));
-  // },
-  // setSignInActive: () => {
-  //   set(() => ({ isSignIn: true }));
-  // },
-  // setInActive: () => {
-  //   set(() => ({ isSignIn: false }));
-  // },
   setToken: (token) => {
     return new Promise((resolve, reject) => {
       if (typeof token !== "string") {

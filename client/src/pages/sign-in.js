@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
 import { MUTATION_LOGIN, GET_user } from "../utils/apolloGraphql";
@@ -17,7 +16,7 @@ const SignIn = () => {
     formState: { errors },
   } = useForm();
 
-  const [loginFn, { loading: loginLoading }] = useMutation(MUTATION_LOGIN, {
+  const [loginFn] = useMutation(MUTATION_LOGIN, {
     onCompleted({ login }) {
       if (login.success) {
         setToken(login.user?.token);
@@ -79,7 +78,7 @@ const SignIn = () => {
   console.log(user);
 
   return (
-    <SignInContainer>
+    <div className="login-container">
       {user ? (
         <div>
           <h2>Welcome {user.name}!</h2>
@@ -90,7 +89,7 @@ const SignIn = () => {
         <>
           <h2>SIGN IN</h2>
           <form onSubmit={handleSubmit(handleLogin)}>
-            <Field>
+            <div className="field">
               <label>Email</label>
               <input
                 type="email"
@@ -98,8 +97,8 @@ const SignIn = () => {
                 {...register("email", loginOptions.email)}
               />
               <small>{errors?.email && errors.email.message}</small>
-            </Field>
-            <Field>
+            </div>
+            <div className="field">
               <label>Password</label>
               <input
                 type="password"
@@ -107,113 +106,16 @@ const SignIn = () => {
                 {...register("password", loginOptions.password)}
               />
               <small>{errors?.password && errors.password.message}</small>
-            </Field>
-            <Buttons>
+            </div>
+            <div className="login-action">
               <button>Submit</button>
               <Link to="/registration">Sign Up</Link>
-            </Buttons>
+            </div>
           </form>
         </>
       )}
-    </SignInContainer>
+    </div>
   );
 };
-
-const SignInContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2rem;
-
-  h2 {
-    color: rgb(65, 65, 65);
-  }
-
-  p {
-    text-decoration: underline;
-    cursor: pointer;
-    color: rgb(65, 65, 65);
-  }
-
-  a {
-    color: rgb(65, 65, 65);
-  }
-
-  form {
-    color: rgb(65, 65, 65);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 2rem;
-  }
-`;
-
-const Field = styled.div`
-  width: 80%;
-
-  label {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
-  input {
-    width: 100%;
-    font-size: 1rem;
-    padding: 0.5rem;
-    margin: 0.5rem 0rem;
-    background-color: #fafafa;
-    border-width: thin;
-    border-color: #d3d3d3;
-    border-radius: 4px;
-
-    &:focus {
-      outline: none;
-      border-color: rgb(65, 65, 65);
-    }
-  }
-
-  small {
-    font-size: 1rem;
-    margin-top: 0.5rem;
-    color: #dc143c;
-  }
-`;
-
-const Buttons = styled.div`
-  width: 80%;
-  margin-top: 2rem;
-
-  button {
-    width: 50%;
-    font-size: 1.2rem;
-    padding: 0.5rem;
-    margin-top: 2rem;
-    margin-right: 1rem;
-    background: transparent;
-    color: rgb(65, 65, 65);
-    border: 2px solid rgb(65, 65, 65);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: rgb(65, 65, 65);
-      color: white;
-    }
-  }
-
-  a {
-    width: 50%;
-    font-size: 1.2rem;
-    margin-top: 2rem;
-    margin-left: 1rem;
-    color: rgb(65, 65, 65);
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-  }
-`;
 
 export default SignIn;

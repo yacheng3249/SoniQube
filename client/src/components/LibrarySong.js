@@ -1,45 +1,75 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
-import useDialogStatusStore from "../zustand/useDialogStatusStore";
 import { playAudio } from "../utils";
+import { useAlert } from "../providers/AlertProvider";
+import { useMutation } from "@apollo/client";
+import { delete_song } from "../utils/apolloGraphql";
 
-const LibrarySong = ({ audioRef }) => {
-  const { currentSong, setCurrentSong, setSelectedDeleteSong, songs } =
-    useCurrentSongStore();
+const LibrarySong = ({ audioRef, refetch }) => {
+  const { alert } = useAlert();
+  const { currentSong, setCurrentSong, songs } = useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
-  const { setDialogStatusActive, setDialogContent } = useDialogStatusStore();
 
   const songSelectHandler = async (song) => {
     setCurrentSong(song);
     playAudio(isPlaying, audioRef);
   };
 
-  const songDeleteHandler = async (song) => {
-    setSelectedDeleteSong(song);
-    setDialogContent(
-      "Are you sure you want to delete?",
-      `${song.artist} - ${song.name}`
-    );
-    setDialogStatusActive();
-  };
+  const [delete_Song_Fn] = useMutation(delete_song, {
+    onCompleted({ deleteSong }) {
+      if (deleteSong.success) {
+        refetch();
+      }
+    },
+    onError(error) {
+      console.log(error);
+      return null;
+    },
+  });
+
+  const songDeleteHandler = useCallback(
+    (song) => {
+      alert(
+        "Are you sure you want to delete?",
+        `${song.artist} - ${song.name}`,
+        [
+          {
+            text: "CANCEL",
+          },
+          {
+            text: "CONFIRM",
+            onClick: () => {
+              delete_Song_Fn({
+                variables: {
+                  songId: song.id,
+                },
+              });
+            },
+          },
+        ]
+      );
+    },
+    [alert, delete_Song_Fn]
+  );
 
   return (
     <div>
       {songs.map((song) => (
-        <LibrarySongs
+        <div
           key={song.id}
-          className={`${song.id === currentSong.id ? "selected" : ""}`}
+          className={`librarySong-container ${
+            song.id === currentSong.id ? "selected" : ""
+          }`}
         >
-          <div onClick={() => songSelectHandler(song)}>
+          <div onClick={() => songSelectHandler(song)} className="song-info">
             <img src={song.cover} alt={song.name} />
-            <SongDescription>
+            <div className="song-description">
               <h3>{song.name}</h3>
               <h4>{song.artist}</h4>
-            </SongDescription>
+            </div>
           </div>
           <FontAwesomeIcon
             size="1x"
@@ -47,40 +77,10 @@ const LibrarySong = ({ audioRef }) => {
             icon={faTrash}
             onClick={() => songDeleteHandler(song)}
           />
-        </LibrarySongs>
+        </div>
       ))}
     </div>
   );
 };
-
-const LibrarySongs = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 1rem 2rem;
-  cursor: pointer;
-  transition: background 0.5s ease;
-  div {
-    display: flex;
-    img {
-      width: 30%;
-    }
-  }
-  &:hover {
-    background: rgb(197, 212, 243);
-  }
-`;
-
-const SongDescription = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 1rem;
-  h3 {
-    font-size: 1rem;
-  }
-  h4 {
-    font-size: 0.7rem;
-  }
-`;
 
 export default LibrarySong;

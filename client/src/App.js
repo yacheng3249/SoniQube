@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import "./styles/all.scss";
 import styled from "styled-components";
 //Adding pages and Components
 import Home from "./pages/index";
@@ -6,22 +7,18 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/SignUp";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
-import ConfirmationDialog from "./components/ConfirmationDialog";
-//Import Styles
-import GlobalStyles from "./components/GlobalStyle";
-import useLibraryStatusStore from "./zustand/useLibraryStatusStore";
-import useDialogStatusStore from "./zustand/useDialogStatusStore";
+
 import useCurrentSongStore from "./zustand/useCurrentSongStore";
 import useSignInStore from "./zustand/useSignInStore";
 import { useQuery } from "@apollo/client";
 import { GET_songs } from "./utils/apolloGraphql";
 import { Route, Routes } from "react-router-dom";
+import AlertProvider from "./providers/AlertProvider";
 
 function App() {
   const { token } = useSignInStore();
-  const { libraryStatus } = useLibraryStatusStore();
   const { currentSong, setCurrentSong, setSongs } = useCurrentSongStore();
-  const { dialogStatus } = useDialogStatusStore();
+  const [libraryStatus, setLibraryStatus] = useState(false);
   //Ref
   const audioRef = useRef(null);
 
@@ -41,17 +38,21 @@ function App() {
   });
 
   return (
-    <StyleApp className={`${libraryStatus ? "library-active" : ""}`}>
-      <GlobalStyles />
-      <Nav />
-      <Routes>
-        <Route path="/" element={<Home audioRef={audioRef} />} />
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/registration" element={<SignUp />} />
-      </Routes>
-      <Library audioRef={audioRef} refetch={refetch} />
-      {dialogStatus ? <ConfirmationDialog refetch={refetch} /> : ""}
-    </StyleApp>
+    <AlertProvider>
+      <StyleApp className={`${libraryStatus ? "library-active" : ""}`}>
+        <Nav setLibraryStatus={setLibraryStatus} />
+        <Routes>
+          <Route path="/" element={<Home audioRef={audioRef} />} />
+          <Route path="/login" element={<SignIn />} />
+          <Route path="/registration" element={<SignUp />} />
+        </Routes>
+        <Library
+          audioRef={audioRef}
+          refetch={refetch}
+          libraryStatus={libraryStatus}
+        />
+      </StyleApp>
+    </AlertProvider>
   );
 }
 

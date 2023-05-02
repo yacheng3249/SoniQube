@@ -1,0 +1,39 @@
+.library-container {
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20rem;
+  height: 100%;
+  box-shadow: 2px 2px 50px rgb(204, 204, 204);
+  overflow: scroll;
+  transform: translateX(-100%);
+  transition: all 0.5s ease;
+  opacity: 0;
+  h2 {
+    padding: 2rem;
+  }
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.active-library {
+  transform: translateX(0%);
+  opacity: 1;
+}
+
+input {
+  border: none;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  outline: none;
+  position: relative;
+
+  &::placeholder {
+    color: #aaa;
+  }
+}

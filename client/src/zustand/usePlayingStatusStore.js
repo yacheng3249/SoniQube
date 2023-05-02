@@ -3,7 +3,10 @@ import { create } from "zustand";
 const usePlayingStatusStore = create((set) => ({
   isPlaying: false,
   setPlayingStatus: () => {
-    set((state) => ({ isPlaying: !state.isPlaying }));
+    return new Promise((resolve, reject) => {
+      set((state) => ({ isPlaying: !state.isPlaying }));
+      return resolve(200);
+    });
   },
 }));
 
