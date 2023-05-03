@@ -5,7 +5,6 @@ import React, {
   useMemo,
   memo,
 } from "react";
-import styled from "styled-components";
 
 const AlertContext = createContext();
 
@@ -96,11 +95,11 @@ const AlertModal = ({ data = [], reducerDispatch = () => {} }) => {
   return (
     <>
       {open && (
-        <DialogOverlay open={open} onClose={_onClose}>
-          <Dialog>
+        <div className="alert" open={open} onClose={_onClose}>
+          <div className="alert-content">
             <h2>{switchData["title"]}</h2>
             <p>{switchData["contentText"]}</p>
-            <DialogButtons>
+            <div className="alert-button">
               {switchData["actions"].map(({ text, onClick }) => (
                 <button
                   onClick={() => {
@@ -113,63 +112,10 @@ const AlertModal = ({ data = [], reducerDispatch = () => {} }) => {
                   {text}
                 </button>
               ))}
-            </DialogButtons>
-          </Dialog>
-        </DialogOverlay>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
 };
-
-const DialogOverlay = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 30%;
-  z-index: 999;
-  @media screen and (max-width: 768px) {
-    width: 90%;
-  }
-`;
-
-const Dialog = styled.div`
-  background-color: rgb(65, 65, 65);
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  opacity: 1;
-  h2 {
-    margin-top: 0;
-    font-size: 18px;
-    color: white;
-  }
-  p {
-    color: white;
-    font-size: 12px;
-  }
-`;
-
-const DialogButtons = styled.div`
-  margin-top: 48px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-
-  button {
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 8px 16px;
-    margin: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    background-color: #007bff;
-    color: #fff;
-
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  }
-`;

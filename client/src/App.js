@@ -1,19 +1,18 @@
 import React, { useRef, useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { GET_songs } from "./utils/apolloGraphql";
 import "./styles/all.scss";
-import styled from "styled-components";
 //Adding pages and Components
 import Home from "./pages/index";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/SignUp";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
-
+import AlertProvider from "./providers/AlertProvider";
+// state store
 import useCurrentSongStore from "./zustand/useCurrentSongStore";
 import useSignInStore from "./zustand/useSignInStore";
-import { useQuery } from "@apollo/client";
-import { GET_songs } from "./utils/apolloGraphql";
-import { Route, Routes } from "react-router-dom";
-import AlertProvider from "./providers/AlertProvider";
 
 function App() {
   const { token } = useSignInStore();
@@ -27,19 +26,20 @@ function App() {
     nextFetchPolicy: "network-only",
     skip: !token,
     onCompleted({ songs }) {
+      console.log("working");
       setSongs(songs);
       if (!currentSong) {
         setCurrentSong(songs[0]);
       }
     },
-    onError(error) {
+    onError() {
       return null;
     },
   });
 
   return (
     <AlertProvider>
-      <StyleApp className={`${libraryStatus ? "library-active" : ""}`}>
+      <div className={`app-style ${libraryStatus ? "library-active" : ""}`}>
         <Nav setLibraryStatus={setLibraryStatus} />
         <Routes>
           <Route path="/" element={<Home audioRef={audioRef} />} />
@@ -51,13 +51,9 @@ function App() {
           refetch={refetch}
           libraryStatus={libraryStatus}
         />
-      </StyleApp>
+      </div>
     </AlertProvider>
   );
 }
-
-const StyleApp = styled.div`
-  transition: all 0.5s ease;
-`;
 
 export default App;

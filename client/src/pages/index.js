@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import Song from "../components/Song";
 import Player from "../components/Player";
 import useSignInStore from "../zustand/useSignInStore";
@@ -17,98 +16,32 @@ const Home = ({ audioRef }) => {
           <>
             <Song />
             <Player audioRef={audioRef} />
-            {/* {dialogStatus ? <ConfirmationDialog refetch={refetch} /> : ""} */}
           </>
         ) : (
-          <HomeWrapper>
+          <div className="home-container">
             <h2>Your library is currently empty.</h2>
             <h4>There are no songs available.</h4>
-          </HomeWrapper>
+          </div>
         )
       ) : (
-        <HomeWrapper>
-          <ImageWrapper>
-            <img
-              src="https://images.unsplash.com/photo-1519681393784-d120267933ba"
-              alt="cover image"
-            />
-          </ImageWrapper>
-
-          <ButtonWrapper>
+        <div className="home-container">
+          <img
+            className="home-image"
+            src="https://images.unsplash.com/photo-1519681393784-d120267933ba"
+            alt="cover image"
+          />
+          <div className="button-wrapper">
             <Link to="/login">
               <button>Sign In</button>
             </Link>
             <Link to="/registration">
               <button>Sign Up</button>
             </Link>
-          </ButtonWrapper>
-        </HomeWrapper>
+          </div>
+        </div>
       )}
     </>
   );
 };
-
-const HomeWrapper = styled.div`
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ImageWrapper = styled.div`
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-
-  img {
-    width: 20%;
-    height: auto;
-    border-radius: 50%;
-    aspect-ratio: 1 / 1;
-    // filter: grayscale(100%) sepia(30%) hue-rotate(180deg);
-  }
-
-  @media screen and (max-width: 768px) {
-    img {
-      width: 80%;
-    }
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  width: 50%;
-  min-height: 20vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-
-  button {
-    font-size: 18px;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    color: white;
-    background-color: #a4b7be;
-    box-shadow: 5px 5px 10px #d4d4d4, -5px -5px 10px #ffffff;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #2c3e50;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-    button {
-      padding: 0;
-      width: 200px;
-      height: 40px;
-    }
-  }
-`;
 
 export default Home;

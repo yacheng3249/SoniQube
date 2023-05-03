@@ -56,11 +56,7 @@ const SignIn = () => {
     reset();
   };
 
-  const {
-    data: userData,
-    loading: getUserLoading,
-    refetch: getUser,
-  } = useQuery(GET_user, {
+  const { data: userData, refetch: getUser } = useQuery(GET_user, {
     fetchPolicy: "network-only",
     skip: !token,
     onError() {
@@ -78,12 +74,14 @@ const SignIn = () => {
   console.log(user);
 
   return (
-    <div className="login-container">
+    <div className="form-container">
       {user ? (
         <div>
           <h2>Welcome {user.name}!</h2>
           <Link to="/">Back to SonoQube Player</Link>
-          <p onClick={() => handleLogOut()}>Log out</p>
+          <p className="logout" onClick={() => handleLogOut()}>
+            Log out
+          </p>
         </div>
       ) : (
         <>
@@ -108,7 +106,7 @@ const SignIn = () => {
               <small>{errors?.password && errors.password.message}</small>
             </div>
             <div className="login-action">
-              <button>Submit</button>
+              <button className="submit-button">Submit</button>
               <Link to="/registration">Sign Up</Link>
             </div>
           </form>
