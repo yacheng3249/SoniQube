@@ -1,25 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useSignInStore from "../zustand/useSignInStore";
+import useCurrentSongStore from "../zustand/useCurrentSongStore";
 
 // memo avoids this component keeping re-rendering when is unnecessary during parent component is re-rendering
-const Nav = React.memo(({ setLibraryStatus }) => {
-  return (
-    <div className="nav">
-      <h1>
-        <Link to="/">SoniQube</Link>
-      </h1>
-      <div className="menu">
-        <Link to="/login">
-          <FontAwesomeIcon size="2x" icon={faUserCircle} />
-        </Link>
-        <button onClick={() => setLibraryStatus((state) => !state)}>
-          Library
-        </button>
+const Nav = React.memo(
+  ({ setLibraryStatus, showDropdown, setShowDropdown }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { token, removeToken } = useSignInStore();
+    const { removeCurrentSong } = useCurrentSongStore();
+
+    const handleLogOut = () => {
+      removeToken();
+      removeCurrentSong();
+      if (location.pathname !== "/") navigate("/");
+    };
+
+    const handleDropdownClick = (event) => {
+      event.stopPropagation();
+    };
+
+    return (
+      <div className="nav">
+        <h1>
+          <Link to="/">SoniQube</Link>
+        </h1>
+        <div className="menu">
+          {token ? (
+            <div className="dropdown" onClick={handleDropdownClick}>
+              <FontAwesomeIcon
+                size="2x"
+                icon={faUserCircle}
+                onClick={() => setShowDropdown((prev) => !prev)}
+              />
+              {showDropdown && (
+                <ul
+                  className="dropdown-content"
+                  onClick={() => setShowDropdown(false)}
+                >
+                  <li>
+                    <Link to="/profile">Profile</Link>
+                  </li>
+                  <li>
+                    <Link to="/">Settings</Link>
+                  </li>
+                  <li>
+                    <a onClick={() => handleLogOut()}>Logout</a>
+                  </li>
+                </ul>
+              )}
+            </div>
+          ) : (
+            <Link to="/login">
+              <FontAwesomeIcon size="2x" icon={faUserCircle} />
+            </Link>
+          )}
+
+          <button onClick={() => setLibraryStatus((state) => !state)}>
+            Library
+          </button>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 export default Nav;

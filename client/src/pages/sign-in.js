@@ -1,14 +1,13 @@
 import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@apollo/client";
-import { MUTATION_LOGIN, GET_user } from "../utils/apolloGraphql";
+import { useMutation } from "@apollo/client";
+import { MUTATION_LOGIN } from "../utils/apolloGraphql";
 import useSignInStore from "../zustand/useSignInStore";
-import useCurrentSongStore from "../zustand/useCurrentSongStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
-  const { token, setToken, removeToken } = useSignInStore();
-  const { removeCurrentSong } = useCurrentSongStore();
+  const navigate = useNavigate();
+  const { token, setToken } = useSignInStore();
   const {
     register,
     handleSubmit,
@@ -20,6 +19,7 @@ const SignIn = () => {
     onCompleted({ login }) {
       if (login.success) {
         setToken(login.user?.token);
+        navigate("/");
       } else {
         console.log(login.message);
       }
@@ -50,68 +50,33 @@ const SignIn = () => {
     });
   };
 
-  const handleLogOut = () => {
-    removeToken();
-    removeCurrentSong();
-    reset();
-  };
-
-  const { data: userData, refetch: getUser } = useQuery(GET_user, {
-    fetchPolicy: "network-only",
-    skip: !token,
-    onError() {
-      return null;
-    },
-  });
-  const user = userData?.user;
-  // const user = useMemo(() => userData?.user, [userData, token]);
-
-  // useEffect(() => {
-  //   getUser();
-  // }, [getUser]);
-
-  console.log(token);
-  console.log(user);
-
   return (
     <div className="form-container">
-      {user ? (
-        <div>
-          <h2>Welcome {user.name}!</h2>
-          <Link to="/">Back to SonoQube Player</Link>
-          <p className="logout" onClick={() => handleLogOut()}>
-            Log out
-          </p>
+      <h2>SIGN IN</h2>
+      <form onSubmit={handleSubmit(handleLogin)}>
+        <div className="field">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            {...register("email", loginOptions.email)}
+          />
+          <small>{errors?.email && errors.email.message}</small>
         </div>
-      ) : (
-        <>
-          <h2>SIGN IN</h2>
-          <form onSubmit={handleSubmit(handleLogin)}>
-            <div className="field">
-              <label>Email</label>
-              <input
-                type="email"
-                name="email"
-                {...register("email", loginOptions.email)}
-              />
-              <small>{errors?.email && errors.email.message}</small>
-            </div>
-            <div className="field">
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                {...register("password", loginOptions.password)}
-              />
-              <small>{errors?.password && errors.password.message}</small>
-            </div>
-            <div className="login-action">
-              <button className="submit-button">Submit</button>
-              <Link to="/registration">Sign Up</Link>
-            </div>
-          </form>
-        </>
-      )}
+        <div className="field">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            {...register("password", loginOptions.password)}
+          />
+          <small>{errors?.password && errors.password.message}</small>
+        </div>
+        <div className="login-action">
+          <button className="submit-button">Submit</button>
+          <Link to="/registration">Sign Up</Link>
+        </div>
+      </form>
     </div>
   );
 };

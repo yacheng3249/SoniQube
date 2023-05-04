@@ -20,7 +20,7 @@ const SignUp = () => {
       if (signUp.success) {
         setToken(signUp.user?.token);
         alert("Successfully signed up!");
-        navigate("/login");
+        navigate("/");
       }
     },
     onError(error) {

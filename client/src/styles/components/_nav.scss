@@ -25,3 +25,15 @@
     color: var(--darkGray);
   }
 }
+
+.dropdown-content {
+  position: absolute;
+  background-color: var(--black);
+  z-index: 1;
+  margin-top: 5px;
+}
+
+.dropdown-content a {
+  padding: 12px 16px;
+  display: block;
+}

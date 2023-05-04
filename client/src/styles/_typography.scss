@@ -61,6 +61,16 @@ button {
   }
 }
 
+li {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+svg {
+  cursor: pointer;
+}
+
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   cursor: pointer;

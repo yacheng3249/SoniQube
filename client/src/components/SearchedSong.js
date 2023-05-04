@@ -85,7 +85,7 @@ const SearchedSong = ({ textInput, refetch, audioRef }) => {
         searchedSongData.map((song) => (
           <div
             className={`librarySong-container ${
-              song.id === currentSong.id ? "selected" : ""
+              song.id === currentSong?.id ? "selected" : ""
             }`}
             key={song.id}
           >

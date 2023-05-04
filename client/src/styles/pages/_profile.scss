@@ -1,0 +1,26 @@
+// .profile {
+//   background-color: bisque;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+.profile-container {
+  position: relative;
+  background-color: var(--darkGray);
+  color: #fff;
+  width: 500px;
+  padding: 50px 0 50px 100px;
+  margin: auto;
+  margin-top: 80px;
+  border-radius: 5px;
+  h2 {
+    margin-bottom: 20px;
+  }
+  svg {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+}

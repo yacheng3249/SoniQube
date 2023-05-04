@@ -7,6 +7,7 @@ import "./styles/all.scss";
 import Home from "./pages/index";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/SignUp";
+import Profile from "./pages/profile";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
 import AlertProvider from "./providers/AlertProvider";
@@ -18,6 +19,7 @@ function App() {
   const { token } = useSignInStore();
   const { currentSong, setCurrentSong, setSongs } = useCurrentSongStore();
   const [libraryStatus, setLibraryStatus] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   //Ref
   const audioRef = useRef(null);
 
@@ -39,12 +41,20 @@ function App() {
 
   return (
     <AlertProvider>
-      <div className={`app-style ${libraryStatus ? "library-active" : ""}`}>
-        <Nav setLibraryStatus={setLibraryStatus} />
+      <div
+        className={`app-style ${libraryStatus ? "library-active" : ""}`}
+        onClick={() => setShowDropdown(false)}
+      >
+        <Nav
+          setLibraryStatus={setLibraryStatus}
+          showDropdown={showDropdown}
+          setShowDropdown={setShowDropdown}
+        />
         <Routes>
           <Route path="/" element={<Home audioRef={audioRef} />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/registration" element={<SignUp />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Library
           audioRef={audioRef}
