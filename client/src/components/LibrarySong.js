@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
@@ -8,7 +8,7 @@ import { useAlert } from "../providers/AlertProvider";
 import { useMutation } from "@apollo/client";
 import { delete_song } from "../utils/apolloGraphql";
 
-const LibrarySong = ({ audioRef, refetch }) => {
+const LibrarySong = ({ audioRef, refetch, textInput }) => {
   const { alert } = useAlert();
   const { currentSong, setCurrentSong, songs } = useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
@@ -54,6 +54,18 @@ const LibrarySong = ({ audioRef, refetch }) => {
     },
     [alert, delete_Song_Fn]
   );
+
+  // const [loadSongs] = useLazyQuery(GET_songs, {
+  //   onCompleted({ songs }) {
+  //     setSongs(songs);
+  //   },
+  // });
+
+  useEffect(() => {
+    if (!textInput) {
+      refetch();
+    }
+  }, [textInput]);
 
   return (
     <div>

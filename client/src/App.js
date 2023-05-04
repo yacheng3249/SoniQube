@@ -24,9 +24,9 @@ function App() {
   const { data, loading, refetch } = useQuery(GET_songs, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
     skip: !token,
     onCompleted({ songs }) {
-      console.log("working");
       setSongs(songs);
       if (!currentSong) {
         setCurrentSong(songs[0]);
