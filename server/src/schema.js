@@ -11,6 +11,7 @@ const typeDefs = gql`
     signUp(name: String, email: String!, password: String!): UserResponse
     login(email: String!, password: String!): UserResponse
     updateUserInfo(userUpdateInput: UserUpdateInput): User
+    checkEmail(email: String!): Response!
     deleteSong(id: String): Response!
     addSong(songInput: SongInput!): Song
   }

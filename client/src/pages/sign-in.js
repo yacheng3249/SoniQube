@@ -71,6 +71,9 @@ const SignIn = () => {
             {...register("password", loginOptions.password)}
           />
           <small>{errors?.password && errors.password.message}</small>
+          <a style={{ "text-align": "right", display: "block" }}>
+            Forget password?
+          </a>
         </div>
         <div className="login-action">
           <button className="submit-button">Submit</button>

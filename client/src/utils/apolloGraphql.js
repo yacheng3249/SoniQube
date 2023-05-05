@@ -1,18 +1,5 @@
 import { gql } from "@apollo/client";
 
-export const GET_song = gql`
-  query Song($songId: String) {
-    song(id: $songId) {
-      id
-      name
-      artist
-      cover
-      active
-      audio
-    }
-  }
-`;
-
 export const GET_songs = gql`
   query Songs {
     songs {
@@ -84,6 +71,14 @@ export const add_song = gql`
       cover
       active
       audio
+    }
+  }
+`;
+
+export const UPDATE_MEMBER = gql`
+  mutation updateUserInfo($userUpdateInput: UserUpdateInput) {
+    updateUserInfo(userUpdateInput: $userUpdateInput) {
+      name
     }
   }
 `;

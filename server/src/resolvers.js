@@ -112,6 +112,21 @@ module.exports = {
       }
     ),
 
+    checkEmail: async (parent, { email }) => {
+      try {
+        const existUser = await store.user.findUnique({
+          where: { email },
+        });
+
+        return existUser
+          ? { success: true }
+          : { success: false, message: "This email is not valid." };
+      } catch (error) {
+        console.error(error);
+        return { success: false, message: "Server Error! Try again later." };
+      }
+    },
+
     deleteSong: isAuthenticated(async (_, { id }) => {
       try {
         await store.userSong.delete({

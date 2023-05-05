@@ -68,23 +68,21 @@
   &.sm {
     width: 2rem;
     height: 2rem;
-    opacity: 0.75;
+    // opacity: 0.75;
   }
   &.md {
     width: 2.5rem;
     height: 2.5rem;
-    opacity: 0.85;
+    // opacity: 0.85;
   }
   &.lg {
     width: 3.25rem;
     height: 3.25rem;
-    box-shadow: inset 6px 6px 12px #c8c8c8, inset -6px -6px 12px #ffffff;
   }
 }
 
 .button-active {
-  text-shadow: 0 0 5px #ffd700;
-  color: red;
+  box-shadow: inset 6px 6px 12px #c8c8c8, inset -6px -6px 12px #ffffff;
 }
 // input[type="range"]:focus {
 //   outline: none;

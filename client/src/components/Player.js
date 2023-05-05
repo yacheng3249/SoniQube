@@ -121,7 +121,7 @@ const Player = ({ audioRef }) => {
               icon={faStepBackward}
             />
           </li>
-          <li className="icon-button lg">
+          <li className={`icon-button lg ${isPlaying ? "button-active" : ""}`}>
             <FontAwesomeIcon
               onClick={playSongHandler}
               size="1x"
@@ -134,11 +134,10 @@ const Player = ({ audioRef }) => {
               icon={faStepForward}
             />
           </li>
-          <li className="icon-button sm">
+          <li className={`icon-button sm ${isSongLoop ? "button-active" : ""}`}>
             <FontAwesomeIcon
               onClick={() => setSongLoopStatus(!isSongLoop)}
               size="1x"
-              className={`${isSongLoop ? "button-active" : ""}`}
               icon={faCircleNotch}
             />
           </li>
