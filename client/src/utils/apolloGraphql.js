@@ -82,3 +82,30 @@ export const UPDATE_MEMBER = gql`
     }
   }
 `;
+
+export const CHECK_EMAIL = gql`
+  mutation checkEmail($email: String!) {
+    checkEmail(email: $email) {
+      success
+      message
+    }
+  }
+`;
+
+export const SEND_VERIFICATIONCODE = gql`
+  mutation sendVerificationCode($email: String) {
+    sendVerificationCode(email: $email) {
+      success
+      message
+    }
+  }
+`;
+
+export const CHECK_VERIFICATIONCODE = gql`
+  mutation checkVerificationCode($email: String, $verificationCode: String!) {
+    checkVerificationCode(email: $email, verificationCode: $verificationCode) {
+      success
+      message
+    }
+  }
+`;

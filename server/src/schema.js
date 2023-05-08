@@ -12,6 +12,8 @@ const typeDefs = gql`
     login(email: String!, password: String!): UserResponse
     updateUserInfo(userUpdateInput: UserUpdateInput): User
     checkEmail(email: String!): Response!
+    sendVerificationCode(email: String): Response!
+    checkVerificationCode(email: String, verificationCode: String!): Response!
     deleteSong(id: String): Response!
     addSong(songInput: SongInput!): Song
   }

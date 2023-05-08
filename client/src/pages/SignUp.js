@@ -4,9 +4,11 @@ import { useMutation } from "@apollo/client";
 import { SIGNUP_MUTATION } from "../utils/apolloGraphql";
 import useSignInStore from "../zustand/useSignInStore";
 import { useNavigate } from "react-router-dom";
+import { useAlert } from "../providers/AlertProvider";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const { notify } = useAlert();
   const { setToken } = useSignInStore();
   const {
     register,
@@ -17,15 +19,16 @@ const SignUp = () => {
 
   const [signUpFn] = useMutation(SIGNUP_MUTATION, {
     onCompleted({ signUp }) {
-      if (signUp.success) {
+      if (signUp.message) {
+        reset();
+        notify(signUp.message);
+      } else {
         setToken(signUp.user?.token);
-        alert("Successfully signed up!");
+        notify("Successfully signed up!");
         navigate("/");
       }
     },
-    onError(error) {
-      reset();
-      alert(error);
+    onError() {
       return null;
     },
   });

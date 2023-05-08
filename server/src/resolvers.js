@@ -3,6 +3,8 @@ const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const store = new PrismaClient();
+const nodemailer = require("nodemailer");
+const { DateTime, Interval } = require("luxon");
 const axios = require("axios");
 const fs = require("fs");
 // Define the number of saltRounds required for bcrypt encryption.
@@ -21,6 +23,30 @@ const createToken = ({ id, email, name }) =>
 const isAuthenticated = (resolverFunc) => (parent, args, context) => {
   if (!context.user) throw new ForbiddenError("Please log in.");
   return resolverFunc.apply(null, [parent, args, context]);
+};
+
+const sendEmail = async (email, subject, content) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "Outlook",
+      auth: {
+        user: process.env.SENDER_EMAIL_ADDRESS,
+        pass: process.env.SENDER_EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL_ADDRESS,
+      to: email,
+      subject,
+      html: content,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: error };
+  }
 };
 
 // resolvers
@@ -44,9 +70,11 @@ module.exports = {
           where: { email },
         });
         if (isUserEmailDuplicate) {
-          throw new Error(
-            "That email address is already in use, please use a different email address."
-          );
+          return {
+            success: false,
+            message:
+              "That email address is already in use, please use a different email address.",
+          };
         }
 
         // Encrypt(加密) the password before storing it.
@@ -65,7 +93,6 @@ module.exports = {
         newUser.token = createToken(newUser);
         return {
           success: true,
-          message: null,
           user: newUser,
         };
       } catch (error) {
@@ -127,6 +154,67 @@ module.exports = {
       }
     },
 
+    sendVerificationCode: async (parent, { email }) => {
+      try {
+        const verificationCode = Array.from({ length: 6 })
+          .map(() => "0123456789".substr(Math.random() * 10, 1))
+          .join("");
+        await store.verificationCode.create({
+          data: {
+            email,
+            code: verificationCode,
+          },
+        });
+
+        const response = await sendEmail(
+          email,
+          "Email Verification",
+          `<h2>SoniQube Verification Code</h2><p>${verificationCode}</p>`
+        );
+
+        if (response.success) {
+          return { success: true };
+        } else {
+          return { success: false, message: response.message };
+        }
+      } catch (error) {
+        console.error(error);
+        return { success: false, message: error };
+      }
+    },
+
+    checkVerificationCode: async (parent, { email, verificationCode }) => {
+      try {
+        const verificationInfo = await store.verificationCode.findFirst({
+          where: { email },
+          orderBy: [{ id: "desc" }],
+        });
+
+        if (!verificationInfo || verificationInfo.code !== verificationCode)
+          return {
+            success: false,
+            message: "Wrong code, please try again",
+          };
+
+        if (
+          Interval.fromDateTimes(
+            DateTime.fromJSDate(verificationInfo.createdAt),
+            DateTime.now().toJSDate()
+          ).length("minutes") > 10
+        ) {
+          return {
+            success: false,
+            message: "This code has expired. Please request another code.",
+          };
+        }
+
+        return { success: true };
+      } catch (error) {
+        console.error(error);
+        return { success: false, message: error };
+      }
+    },
+
     deleteSong: isAuthenticated(async (_, { id }) => {
       try {
         await store.userSong.delete({
@@ -140,7 +228,7 @@ module.exports = {
 
     addSong: isAuthenticated(async (_, { songInput }, { user }) => {
       try {
-        const { name, artist, cover, active, audio } = songInput;
+        const { name, artist, cover, audio } = songInput;
         // // Download MP3 file.
         // const response = await axios({
         //   url: audio,
@@ -163,7 +251,6 @@ module.exports = {
             name,
             artist,
             cover,
-            active,
             audio,
           },
         });

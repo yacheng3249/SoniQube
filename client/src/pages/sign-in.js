@@ -7,11 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { token, setToken } = useSignInStore();
+  const { setToken } = useSignInStore();
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -71,9 +70,12 @@ const SignIn = () => {
             {...register("password", loginOptions.password)}
           />
           <small>{errors?.password && errors.password.message}</small>
-          <a style={{ "text-align": "right", display: "block" }}>
+          <Link
+            to="/reset_password"
+            style={{ "text-align": "right", display: "block" }}
+          >
             Forget password?
-          </a>
+          </Link>
         </div>
         <div className="login-action">
           <button className="submit-button">Submit</button>

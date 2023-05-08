@@ -5,6 +5,11 @@
   - You are about to drop the `user` table. If the table is not empty, all the data it contains will be lost.
 
 */
+-- RemoveForeignKey
+ALTER TABLE `user_songs` DROP FOREIGN KEY `user_songs_userId_fkey`;
+
+-- DropIndex
+DROP INDEX `user_songs_userId_fkey` ON `user_songs`;
 
 -- DropTable
 DROP TABLE `song`;
@@ -35,11 +40,15 @@ CREATE TABLE `User` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- RemoveForeignKey
-ALTER TABLE `user_songs` DROP FOREIGN KEY `user_songs_userId_fkey`;
+-- CreateTable
+CREATE TABLE `VerificationCode` (
+    `id` VARCHAR(191) NOT NULL,
+    `email` VARCHAR(191) NOT NULL,
+    `code` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
--- DropIndex
-DROP INDEX `user_songs_userId_fkey` ON `user_songs`;
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `user_songs` ADD CONSTRAINT `user_songs_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

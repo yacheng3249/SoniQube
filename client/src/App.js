@@ -8,6 +8,7 @@ import Home from "./pages/index";
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/profile";
+import ForgetPassword from "./pages/forget-password";
 import Library from "./components/Library";
 import Nav from "./components/Nav";
 import AlertProvider from "./providers/AlertProvider";
@@ -55,6 +56,7 @@ function App() {
           <Route path="/login" element={<SignIn />} />
           <Route path="/registration" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/reset_password" element={<ForgetPassword />} />
         </Routes>
         <Library
           audioRef={audioRef}

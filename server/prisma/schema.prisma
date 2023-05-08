@@ -12,8 +12,9 @@ model Song {
   name   String
   artist String
   cover  String
-  active Boolean
   audio  String
+
+  @@map("songs")
 }
 
 model User {
@@ -22,6 +23,8 @@ model User {
   email    String  @unique
   password String
   songs    UserSong[]
+
+  @@map("users")
 }
 
 model UserSong {
@@ -31,8 +34,16 @@ model UserSong {
   name   String
   artist String
   cover  String
-  active Boolean
   audio  String
 
   @@map("user_songs")
+}
+
+model VerificationCode {
+  id        String  @id @default(uuid())
+  email     String
+  code      String
+  createdAt DateTime @default(now())
+
+  @@map("verification_codes")
 }
