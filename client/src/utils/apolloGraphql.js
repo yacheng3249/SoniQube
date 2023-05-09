@@ -93,7 +93,7 @@ export const CHECK_EMAIL = gql`
 `;
 
 export const SEND_VERIFICATIONCODE = gql`
-  mutation sendVerificationCode($email: String) {
+  mutation sendVerificationCode($email: String!) {
     sendVerificationCode(email: $email) {
       success
       message
@@ -102,8 +102,17 @@ export const SEND_VERIFICATIONCODE = gql`
 `;
 
 export const CHECK_VERIFICATIONCODE = gql`
-  mutation checkVerificationCode($email: String, $verificationCode: String!) {
+  mutation checkVerificationCode($email: String!, $verificationCode: String!) {
     checkVerificationCode(email: $email, verificationCode: $verificationCode) {
+      success
+      message
+    }
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+  mutation resetPassword($email: String!, $password: String!) {
+    resetPassword(email: $email, password: $password) {
       success
       message
     }

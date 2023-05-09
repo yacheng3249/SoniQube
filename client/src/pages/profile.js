@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_user, UPDATE_MEMBER } from "../utils/apolloGraphql";
+import { requiredOptions } from "../utils/requiredOptions";
 import useSignInStore from "../zustand/useSignInStore";
 
 const Profile = () => {
@@ -13,16 +14,8 @@ const Profile = () => {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm();
-
-  const editOptions = useMemo(
-    () => ({
-      name: { required: "* Name is required" },
-    }),
-    []
-  );
 
   const { data: userData, refetch: getUser } = useQuery(GET_user, {
     fetchPolicy: "network-only",
@@ -64,13 +57,15 @@ const Profile = () => {
             <form>
               <div className="edit-field">
                 <label>Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  defaultValue={defaultName}
-                  {...register("name", editOptions.name)}
-                />
-                <small>{errors?.name && errors.name.message}</small>
+                <div style={{ width: "100%" }}>
+                  <input
+                    type="text"
+                    name="name"
+                    defaultValue={defaultName}
+                    {...register("name", requiredOptions.name)}
+                  />
+                  <small>{errors?.name && errors.name.message}</small>
+                </div>
               </div>
               <div className="edit-field">
                 <label>Email</label>

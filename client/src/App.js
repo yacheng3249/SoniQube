@@ -62,6 +62,7 @@ function App() {
           audioRef={audioRef}
           refetch={refetch}
           libraryStatus={libraryStatus}
+          setLibraryStatus={setLibraryStatus}
         />
       </div>
     </AlertProvider>

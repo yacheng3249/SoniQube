@@ -1,7 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { MUTATION_LOGIN } from "../utils/apolloGraphql";
+import { requiredOptions } from "../utils/requiredOptions";
 import useSignInStore from "../zustand/useSignInStore";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -28,20 +29,6 @@ const SignIn = () => {
     },
   });
 
-  const loginOptions = useMemo(
-    () => ({
-      email: { required: "* Email is required" },
-      password: {
-        required: "* Password is required",
-        minLength: {
-          value: 6,
-          message: "Password must have at least 6 characters",
-        },
-      },
-    }),
-    []
-  );
-
   const handleLogin = async (data) => {
     const { email, password } = data;
     await loginFn({
@@ -58,7 +45,7 @@ const SignIn = () => {
           <input
             type="email"
             name="email"
-            {...register("email", loginOptions.email)}
+            {...register("email", requiredOptions.email)}
           />
           <small>{errors?.email && errors.email.message}</small>
         </div>
@@ -67,7 +54,7 @@ const SignIn = () => {
           <input
             type="password"
             name="password"
-            {...register("password", loginOptions.password)}
+            {...register("password", requiredOptions.password)}
           />
           <small>{errors?.password && errors.password.message}</small>
           <Link

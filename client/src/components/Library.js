@@ -3,7 +3,7 @@ import LibrarySong from "./LibrarySong";
 import SearchedSong from "./SearchedSong";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 
-const Library = ({ audioRef, refetch, libraryStatus }) => {
+const Library = ({ audioRef, refetch, libraryStatus, setLibraryStatus }) => {
   const { currentSong } = useCurrentSongStore();
   const [textInput, setTextInput] = useState("");
 
@@ -23,7 +23,13 @@ const Library = ({ audioRef, refetch, libraryStatus }) => {
           value={textInput}
         />
       </form>
-      <h2>Library</h2>
+      <div className="library-nav">
+        <h2>Library</h2>
+        <button onClick={() => setLibraryStatus((state) => !state)}>
+          Player
+        </button>
+      </div>
+
       {!textInput ? (
         currentSong ? (
           <LibrarySong
@@ -32,7 +38,7 @@ const Library = ({ audioRef, refetch, libraryStatus }) => {
             textInput={textInput}
           />
         ) : (
-          <h2>Empty</h2>
+          <p>Add some songs and enjoy your day!</p>
         )
       ) : (
         <SearchedSong

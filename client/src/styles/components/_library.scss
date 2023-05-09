@@ -10,8 +10,8 @@
   transform: translateX(-100%);
   transition: all 0.5s ease;
   opacity: 0;
-  h2 {
-    padding: 2rem;
+  p {
+    padding-left: 2rem;
   }
   @media screen and (max-width: 768px) {
     width: 100%;
@@ -35,5 +35,21 @@ input {
 
   &::placeholder {
     color: #aaa;
+  }
+}
+
+.library-nav {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  h2 {
+    margin-left: 2rem;
+  }
+  button {
+    margin-right: 1rem;
+    display: none;
+    @media screen and (max-width: 768px) {
+      display: block;
+    }
   }
 }

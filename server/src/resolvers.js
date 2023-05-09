@@ -215,6 +215,19 @@ module.exports = {
       }
     },
 
+    resetPassword: async (parent, { email, password }) => {
+      try {
+        await store.user.update({
+          where: { email },
+          data: { password: await hash(password, SALT_ROUNDS) },
+        });
+        return { success: true };
+      } catch (error) {
+        console.error(error);
+        return { success: false, message: error };
+      }
+    },
+
     deleteSong: isAuthenticated(async (_, { id }) => {
       try {
         await store.userSong.delete({
