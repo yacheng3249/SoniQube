@@ -2,6 +2,8 @@
 
 SoniQube is a music player application currently under development, which integrates with the Jamendo API to allow users to easily search and play music available on the Jamendo music platform.
 
+[SoniQube Demo Vedio](https://github.com/jamie1i/photo_storage/raw/main/%E8%9E%A2%E5%B9%95%E9%8C%84%E8%A3%BD%202023-05-09%20%E4%B8%8B%E5%8D%885.48.46_Trim.mp4)
+
 ## Client
 
 - Open a terminal and navigate to the client folder in the project directory.
