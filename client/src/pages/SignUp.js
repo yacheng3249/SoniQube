@@ -25,7 +25,7 @@ const SignUp = () => {
         notify(signUp.message);
       } else {
         setToken(signUp.user?.token);
-        notify("Successfully signed up!");
+        notify(`Welcome to SoniQube, ${signUp.user.name}`);
         navigate("/");
       }
     },

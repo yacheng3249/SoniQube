@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_songs } from "./utils/apolloGraphql";
+import { GET_SONGS } from "./utils/apolloGraphql";
 import "./styles/all.scss";
 //Adding pages and Components
 import Home from "./pages/index";
@@ -24,7 +24,7 @@ function App() {
   //Ref
   const audioRef = useRef(null);
 
-  const { data, loading, refetch } = useQuery(GET_songs, {
+  const { refetch } = useQuery(GET_SONGS, {
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,

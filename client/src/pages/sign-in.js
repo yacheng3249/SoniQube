@@ -5,9 +5,11 @@ import { MUTATION_LOGIN } from "../utils/apolloGraphql";
 import { requiredOptions } from "../utils/requiredOptions";
 import useSignInStore from "../zustand/useSignInStore";
 import { Link, useNavigate } from "react-router-dom";
+import { useAlert } from "../providers/AlertProvider";
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { notify } = useAlert();
   const { setToken } = useSignInStore();
   const {
     register,
@@ -21,7 +23,7 @@ const SignIn = () => {
         setToken(login.user?.token);
         navigate("/");
       } else {
-        console.log(login.message);
+        notify(login.message);
       }
     },
     onError() {

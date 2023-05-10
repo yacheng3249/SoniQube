@@ -1,13 +1,12 @@
 import { gql } from "@apollo/client";
 
-export const GET_songs = gql`
+export const GET_SONGS = gql`
   query Songs {
     songs {
       id
       name
       artist
       cover
-      active
       audio
     }
   }
@@ -43,7 +42,7 @@ export const MUTATION_LOGIN = gql`
   }
 `;
 
-export const GET_user = gql`
+export const GET_USER = gql`
   query User {
     user {
       email
@@ -62,15 +61,11 @@ export const delete_song = gql`
   }
 `;
 
-export const add_song = gql`
+export const ADD_SONG = gql`
   mutation addSong($songInput: SongInput!) {
     addSong(songInput: $songInput) {
-      id
-      name
-      artist
-      cover
-      active
-      audio
+      success
+      message
     }
   }
 `;
@@ -78,7 +73,8 @@ export const add_song = gql`
 export const UPDATE_MEMBER = gql`
   mutation updateUserInfo($userUpdateInput: UserUpdateInput) {
     updateUserInfo(userUpdateInput: $userUpdateInput) {
-      name
+      success
+      message
     }
   }
 `;

@@ -3,7 +3,7 @@ import axios from "axios";
 import { searchSongURL } from "../utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { add_song } from "../utils/apolloGraphql";
+import { ADD_SONG } from "../utils/apolloGraphql";
 import { useMutation } from "@apollo/client";
 import { useAlert } from "../providers/AlertProvider";
 import { playAudio } from "../utils";
@@ -11,7 +11,7 @@ import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 
 const SearchedSong = ({ textInput, refetch, audioRef }) => {
-  const { alert } = useAlert();
+  const { notify } = useAlert();
   const [searchedSongData, setSearchedSongData] = useState([]);
   const { currentSong, setCurrentSong, setSongs } = useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
@@ -36,14 +36,14 @@ const SearchedSong = ({ textInput, refetch, audioRef }) => {
     fetchData();
   }, [textInput]);
 
-  const [add_Song_Fn] = useMutation(add_song, {
-    onCompleted() {
-      alert("Song added", "", [
-        {
-          text: "CONFIRM",
-        },
-      ]);
-      refetch();
+  const [add_Song_Fn] = useMutation(ADD_SONG, {
+    onCompleted({ addSong: { message } }) {
+      if (message) {
+        notify(message);
+      } else {
+        notify("Song added");
+        refetch();
+      }
     },
     onError(error) {
       console.log(error);
@@ -59,7 +59,6 @@ const SearchedSong = ({ textInput, refetch, audioRef }) => {
           name,
           artist: artist_name,
           cover: image,
-          active: false,
           audio,
         },
       },

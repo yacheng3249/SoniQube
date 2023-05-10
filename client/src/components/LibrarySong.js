@@ -55,7 +55,7 @@ const LibrarySong = ({ audioRef, refetch, textInput }) => {
     [alert, delete_Song_Fn]
   );
 
-  // const [loadSongs] = useLazyQuery(GET_songs, {
+  // const [loadSongs] = useLazyQuery(GET_SONGS, {
   //   onCompleted({ songs }) {
   //     setSongs(songs);
   //   },

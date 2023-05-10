@@ -96,7 +96,8 @@ module.exports = {
           user: newUser,
         };
       } catch (error) {
-        return { success: false, message: error };
+        console.error(error);
+        return { success: false, message: "Server Error" };
       }
     },
 
@@ -104,38 +105,70 @@ module.exports = {
       try {
         // 1. Find the user corresponding to the given email.
         const user = await store.user.findFirst({ where: { email } });
-        if (!user) throw new Error("The email account does not exists.");
+        if (!user)
+          return {
+            success: false,
+            message: "The email account does not exists.",
+          };
 
         // 2. Compare the given password with the password stored in the database for the user.
         const passwordIsValid = await bcrypt.compare(password, user.password);
-        if (!passwordIsValid) throw new Error("Wrong Password");
+        if (!passwordIsValid)
+          return { success: false, message: "Wrong Password" };
 
         // 3. Return a token if successful.
         const token = createToken(user);
         user.token = token;
-        return { success: true, message: `Successfully login!`, user };
+        return { success: true, user };
       } catch (error) {
-        return { success: false, message: error };
+        console.error(error);
+        return { success: false, message: "Server Error" };
       }
     },
 
     updateUserInfo: isAuthenticated(
       async (parent, { userUpdateInput }, { user }) => {
-        //Filter empty values.
-        const data = Object.keys(userUpdateInput).reduce((obj, key) => {
-          if (userUpdateInput[key]) obj[key] = userUpdateInput[key];
-          return obj;
-        }, {});
+        try {
+          //Filter empty values.
+          const data = Object.keys(userUpdateInput).reduce((obj, key) => {
+            if (userUpdateInput[key]) obj[key] = userUpdateInput[key];
+            return obj;
+          }, {});
 
-        if ("password" in data) {
-          const hashedPassword = await hash(data["password"], SALT_ROUNDS);
-          data["password"] = hashedPassword;
+          if ("newPassword" in data) {
+            if ("oldPassword" in data) {
+              const userInfo = await store.user.findUnique({
+                where: { id: user.id },
+              });
+              if (
+                !(await bcrypt.compare(data.oldPassword, userInfo.password))
+              ) {
+                return {
+                  success: false,
+                  message: "The old password is incorrect.",
+                };
+              }
+            } else {
+              return {
+                success: false,
+                message: "The old password is required.",
+              };
+            }
+
+            data["password"] = await hash(data["newPassword"], SALT_ROUNDS);
+            delete data.oldPassword;
+            delete data.newPassword;
+          }
+
+          await store.user.update({
+            where: { id: user.id },
+            data: data,
+          });
+          return { success: true };
+        } catch (error) {
+          console.error(error);
+          return { success: false, message: "Server Error" };
         }
-
-        return store.user.update({
-          where: { id: user.id },
-          data: data,
-        });
       }
     ),
 
@@ -150,7 +183,7 @@ module.exports = {
           : { success: false, message: "This email is not valid." };
       } catch (error) {
         console.error(error);
-        return { success: false, message: "Server Error! Try again later." };
+        return { success: false, message: "Server Error" };
       }
     },
 
@@ -179,7 +212,7 @@ module.exports = {
         }
       } catch (error) {
         console.error(error);
-        return { success: false, message: error };
+        return { success: false, message: "Server Error" };
       }
     },
 
@@ -211,7 +244,7 @@ module.exports = {
         return { success: true };
       } catch (error) {
         console.error(error);
-        return { success: false, message: error };
+        return { success: false, message: "Server Error" };
       }
     },
 
@@ -224,7 +257,7 @@ module.exports = {
         return { success: true };
       } catch (error) {
         console.error(error);
-        return { success: false, message: error };
+        return { success: false, message: "Server Error" };
       }
     },
 
@@ -233,9 +266,10 @@ module.exports = {
         await store.userSong.delete({
           where: { id },
         });
-        return { success: true, message: `The song has been deleted.` };
+        return { success: true };
       } catch (error) {
-        return { success: false, message: error };
+        console.error(error);
+        return { success: false, message: "Server Error" };
       }
     }),
 
@@ -258,7 +292,7 @@ module.exports = {
         //   writer.on("error", reject);
         // });
 
-        return store.userSong.create({
+        await store.userSong.create({
           data: {
             userId: user.id,
             name,
@@ -267,8 +301,10 @@ module.exports = {
             audio,
           },
         });
+        return { success: true };
       } catch (error) {
-        throw new Error(error);
+        console.error(error);
+        return { success: false, message: "Server Error" };
       }
     }),
   },

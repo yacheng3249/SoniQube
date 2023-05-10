@@ -10,13 +10,13 @@ const typeDefs = gql`
   type Mutation {
     signUp(name: String, email: String!, password: String!): UserResponse
     login(email: String!, password: String!): UserResponse
-    updateUserInfo(userUpdateInput: UserUpdateInput): User
+    updateUserInfo(userUpdateInput: UserUpdateInput): Response!
     checkEmail(email: String!): Response!
     sendVerificationCode(email: String!): Response!
     checkVerificationCode(email: String!, verificationCode: String!): Response!
     resetPassword(email: String!, password: String!): Response!
     deleteSong(id: String): Response!
-    addSong(songInput: SongInput!): Song
+    addSong(songInput: SongInput!): Response!
   }
 
   type Song {
@@ -24,7 +24,6 @@ const typeDefs = gql`
     name: String
     artist: String
     cover: String
-    active: Boolean
     audio: String
   }
 
@@ -49,7 +48,8 @@ const typeDefs = gql`
 
   input UserUpdateInput {
     name: String
-    password: String
+    oldPassword: String
+    newPassword: String
   }
 
   input SongInput {
@@ -57,7 +57,6 @@ const typeDefs = gql`
     name: String
     artist: String
     cover: String
-    active: Boolean
     audio: String
     userId: String
   }

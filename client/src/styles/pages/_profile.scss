@@ -10,7 +10,7 @@
   position: relative;
   background-color: var(--darkGray);
   width: 500px;
-  padding: 50px 20px 50px 70px;
+  padding: 50px 70px;
   margin: auto;
   margin-top: 80px;
   border-radius: 5px;
@@ -41,6 +41,7 @@
   }
   @media screen and (max-width: 768px) {
     width: 95%;
+    padding: 50px 20px;
   }
 }
 
