@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { MUTATION_LOGIN } from "../utils/apolloGraphql";
@@ -6,6 +6,8 @@ import { requiredOptions } from "../utils/requiredOptions";
 import useSignInStore from "../zustand/useSignInStore";
 import { Link, useNavigate } from "react-router-dom";
 import { useAlert } from "../providers/AlertProvider";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const SignIn = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loginFn] = useMutation(MUTATION_LOGIN, {
     onCompleted({ login }) {
@@ -53,11 +56,19 @@ const SignIn = () => {
         </div>
         <div className="field">
           <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            {...register("password", requiredOptions.password)}
-          />
+          <div style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              {...register("password", requiredOptions.password)}
+            />
+            <FontAwesomeIcon
+              className="visibility"
+              onClick={() => setShowPassword(!showPassword)}
+              size="1x"
+              icon={showPassword ? faEye : faEyeSlash}
+            />
+          </div>
           <small>{errors?.password && errors.password.message}</small>
           <Link
             to="/reset_password"
