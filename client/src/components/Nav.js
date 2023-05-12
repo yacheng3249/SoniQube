@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useSignInStore from "../zustand/useSignInStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
+import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 
 // memo avoids this component keeping re-rendering when is unnecessary during parent component is re-rendering
 const Nav = React.memo(
@@ -12,10 +13,12 @@ const Nav = React.memo(
     const navigate = useNavigate();
     const { token, removeToken } = useSignInStore();
     const { removeCurrentSong } = useCurrentSongStore();
+    const { isPlaying, setPlayingStatus } = usePlayingStatusStore();
 
     const handleLogOut = () => {
       removeToken();
       removeCurrentSong();
+      if (isPlaying) setPlayingStatus();
       if (location.pathname !== "/") navigate("/");
     };
 
@@ -42,7 +45,9 @@ const Nav = React.memo(
                   onClick={() => setShowDropdown(false)}
                 >
                   <li>
-                    <Link to="/profile">Profile</Link>
+                    <Link to="/profile" onClick={() => setPlayingStatus()}>
+                      Profile
+                    </Link>
                   </li>
                   <li>
                     <Link to="/">Settings</Link>

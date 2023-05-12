@@ -46,7 +46,7 @@ const SearchedSong = ({ textInput, refetch, audioRef }) => {
       }
     },
     onError(error) {
-      console.log(error);
+      notify(`${error}`);
       return null;
     },
   });

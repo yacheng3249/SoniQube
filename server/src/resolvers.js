@@ -21,7 +21,7 @@ const createToken = ({ id, email, name }) =>
   });
 
 const isAuthenticated = (resolverFunc) => (parent, args, context) => {
-  if (!context.user) throw new ForbiddenError("Please log in.");
+  if (!context.user) throw new ForbiddenError("Please log in to SoniQube.");
   return resolverFunc.apply(null, [parent, args, context]);
 };
 
