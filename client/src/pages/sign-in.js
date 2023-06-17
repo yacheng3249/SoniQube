@@ -47,11 +47,7 @@ const SignIn = () => {
       <form onSubmit={handleSubmit(handleLogin)}>
         <div className="field">
           <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            {...register("email", requiredOptions.email)}
-          />
+          <input type="email" {...register("email", requiredOptions.email)} />
           <small>{errors?.email && errors.email.message}</small>
         </div>
         <div className="field">
@@ -59,7 +55,6 @@ const SignIn = () => {
           <div style={{ position: "relative" }}>
             <input
               type={showPassword ? "text" : "password"}
-              name="password"
               {...register("password", requiredOptions.password)}
             />
             <FontAwesomeIcon

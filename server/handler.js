@@ -1,10 +1,10 @@
-require("dotenv").config();
-
+process.env.SERVERLESS = true;
 const { PrismaClient } = require("@prisma/client");
 const jwt = require("jsonwebtoken");
-const { ApolloServer } = require("apollo-server");
-const typeDefs = require("./schema");
-const resolvers = require("./resolvers");
+const { ApolloServer } = require("apollo-server-lambda");
+const typeDefs = require("./src/schema");
+const resolvers = require("./src/resolvers");
+const express = require("express");
 
 const server = new ApolloServer({
   typeDefs,
@@ -27,8 +27,14 @@ const server = new ApolloServer({
     }
     return context;
   },
+  playground: {
+    endpoint: "/dev/graphql",
+  },
 });
 
-server.listen().then(({ url }) => {
-  console.log(`Server ready at ${url}graphql`);
+exports.graphqlHandler = server.createHandler({
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
 });

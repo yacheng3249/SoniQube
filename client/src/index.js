@@ -14,13 +14,16 @@ import App from "./App";
 import useSignInStore from "./zustand/useSignInStore";
 import reportWebVitals from "./reportWebVitals";
 
+// const httpLink = createHttpLink({
+//   uri: "http://localhost:4000",
+// });
+
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000",
+  uri: "https://b5mg5zdync.execute-api.ap-east-1.amazonaws.com/dev/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
   const token = useSignInStore.getState().token;
-  // console.log(process.env);
   return {
     headers: {
       ...headers,

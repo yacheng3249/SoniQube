@@ -1,6 +1,6 @@
-const { ForbiddenError } = require("apollo-server");
+const { ForbiddenError } = require("apollo-server-lambda");
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const store = new PrismaClient();
 const nodemailer = require("nodemailer");
