@@ -10,8 +10,6 @@ provider:
       - sg-018ab63bfcda5e4b4
     subnetIds:
       - subnet-0a563212177cac4a3
-      # - subnet-05fcf1bd73f15f582
-      # - subnet-01f5197e0807daff0
   runtime: nodejs14.x
   timeout: 30
   stage: dev
