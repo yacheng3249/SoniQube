@@ -8,7 +8,7 @@ SoniQube is a music player application currently under development, which integr
 
 [Test Website](https://d21i174zhu63rt.cloudfront.net/)
 
-You can use the default test account or register a new account to log in:
+:warning:You can use the default test account or register a new account to log in:
 ```
 Test Email: test2@testEmail.com  
 Test Password: @12345
