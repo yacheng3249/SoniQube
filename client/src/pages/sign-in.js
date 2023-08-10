@@ -48,7 +48,7 @@ const SignIn = () => {
         <div className="field">
           <label>Email</label>
           <input type="email" {...register("email", requiredOptions.email)} />
-          <small>{errors?.email && errors.email.message}</small>
+          <small>{!!errors?.email && errors.email.message}</small>
         </div>
         <div className="field">
           <label>Password</label>
