@@ -11,7 +11,7 @@ const Home = ({ audioRef }) => {
 
   return (
     <>
-      {getTokens ? (
+      {token ? (
         currentSong ? (
           <>
             <Song />
