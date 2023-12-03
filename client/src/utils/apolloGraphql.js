@@ -48,6 +48,9 @@ export const GET_USER = gql`
       email
       id
       name
+      mobile
+      gender
+      birthday
     }
   }
 `;

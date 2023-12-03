@@ -22,6 +22,9 @@ model User {
   id       String  @id @default(uuid())
   name     String
   email    String  @unique
+  mobile   String?
+  gender   String?
+  birthday DateTime?  @db.Date
   password String
   songs    UserSong[]
 

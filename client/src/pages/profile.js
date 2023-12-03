@@ -10,16 +10,12 @@ import { useAlert } from "../providers/AlertProvider";
 
 const Profile = () => {
   const [profileState, setProfileState] = useState("profile");
-  const [defaultName, setDefaultName] = useState("");
   const { token } = useSignInStore();
   const { notify } = useAlert();
 
   const { data: userData, refetch: getUser } = useQuery(GET_USER, {
     fetchPolicy: "network-only",
     skip: !token,
-    onCompleted({ user }) {
-      setDefaultName(user.name);
-    },
     onError() {
       return null;
     },
@@ -51,7 +47,6 @@ const Profile = () => {
             setProfileState={setProfileState}
             user={user}
             getUser={getUser}
-            defaultName={defaultName}
             update_userInfo_Fn={update_userInfo_Fn}
           />
         );
@@ -74,23 +69,32 @@ const UserInfo = ({ user, setProfileState }) => {
   return (
     <>
       <h2>PROFILE</h2>
-      <p>
-        Name: <span>{user.name}</span>
-      </p>
-      <p>
-        Email: <span>{user.email}</span>
-      </p>
+      <div className="profile-format">
+        <p>Name</p>
+        <p>{user.name}</p>
+      </div>
+      <div className="profile-format">
+        <p>Email</p>
+        <p>{user.email}</p>
+      </div>
+      <div className="profile-format">
+        <p>Mobile</p>
+        <p>{user.mobile}</p>
+      </div>
+      <div className="profile-format">
+        <p>Gender</p>
+        <p>{user.gender}</p>
+      </div>
+      <div className="profile-format">
+        <p>Birthday</p>
+        <p>{user.birthday.split("T")[0]}</p>
+      </div>
       <FontAwesomeIcon icon={faEdit} onClick={() => setProfileState("edit")} />
     </>
   );
 };
 
-const EditProfile = ({
-  setProfileState,
-  update_userInfo_Fn,
-  defaultName,
-  user,
-}) => {
+const EditProfile = ({ setProfileState, update_userInfo_Fn, user }) => {
   const {
     register,
     handleSubmit,
@@ -99,7 +103,14 @@ const EditProfile = ({
 
   const handleUpdate = async (data) => {
     await update_userInfo_Fn({
-      variables: { userUpdateInput: { name: data.name } },
+      variables: {
+        userUpdateInput: {
+          name: data.name,
+          mobile: data.mobile,
+          gender: data.gender,
+          birthday: new Date(data.birthday),
+        },
+      },
     });
   };
 
@@ -111,8 +122,7 @@ const EditProfile = ({
           <div style={{ width: "100%" }}>
             <input
               type="text"
-              name="name"
-              defaultValue={defaultName}
+              defaultValue={user.name}
               {...register("name", requiredOptions.name)}
             />
             <small>{errors?.name && errors.name.message}</small>
@@ -125,6 +135,54 @@ const EditProfile = ({
             value={user.email}
             {...register("email")}
             disabled
+          />
+        </div>
+        <div className="edit-field">
+          <label>Mobile</label>
+          <div style={{ width: "100%" }}>
+            <input
+              type="text"
+              defaultValue={user.mobile}
+              {...register("mobile")}
+            />
+          </div>
+        </div>
+        <div className="edit-field">
+          <label>Gender</label>
+          <p className="checkbox">
+            <input
+              type="radio"
+              value="male"
+              defaultChecked={user.gender === "male"}
+              {...register("gender")}
+            />
+            male
+          </p>
+          <p className="checkbox">
+            <input
+              type="radio"
+              value="female"
+              defaultChecked={user.gender === "female"}
+              {...register("gender")}
+            />
+            female
+          </p>
+          <p className="checkbox">
+            <input
+              type="radio"
+              value="other"
+              defaultChecked={user.gender === "other"}
+              {...register("gender")}
+            />
+            other
+          </p>
+        </div>
+        <div className="edit-field">
+          <label>Birthday</label>
+          <input
+            type="date"
+            defaultValue={user.birthday.split("T")[0]}
+            {...register("birthday")}
           />
         </div>
         <div className="edit-field">
@@ -170,12 +228,11 @@ const ChangePassword = ({ setProfileState, update_userInfo_Fn }) => {
     <div>
       <h2 style={{ marginBottom: "2.5rem" }}>Change password</h2>
       <form>
-        <div className="field">
+        <div className="field change-password-input">
           <label>Old password</label>
           <div style={{ position: "relative" }}>
             <input
               type={showOldPassword ? "text" : "password"}
-              name="oldPassword"
               {...register("oldPassword", requiredOptions.oldPassword)}
             />
             <FontAwesomeIcon
@@ -187,12 +244,11 @@ const ChangePassword = ({ setProfileState, update_userInfo_Fn }) => {
           </div>
           <small>{errors?.oldPassword && errors.oldPassword.message}</small>
         </div>
-        <div className="field">
+        <div className="field change-password-input">
           <label>New password</label>
           <div style={{ position: "relative" }}>
             <input
               type={showNewPassword ? "text" : "password"}
-              name="newPassword"
               {...register("newPassword", requiredOptions.password)}
             />
             <FontAwesomeIcon
@@ -204,12 +260,11 @@ const ChangePassword = ({ setProfileState, update_userInfo_Fn }) => {
           </div>
           <small>{errors?.newPassword && errors.newPassword.message}</small>
         </div>
-        <div className="field">
+        <div className="field change-password-input">
           <label>Confirm new password</label>
           <div style={{ position: "relative" }}>
             <input
               type={showRePassword ? "text" : "password"}
-              name="rePassword"
               {...register("rePassword", requiredOptions.rePassword)}
             />
             <FontAwesomeIcon

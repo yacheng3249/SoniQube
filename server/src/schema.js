@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server-lambda");
 
 const typeDefs = gql`
+  scalar DateTime
+
   type Query {
     song(id: String): Song
     songs: [Song]
@@ -31,6 +33,9 @@ const typeDefs = gql`
     id: String
     name: String
     email: String
+    mobile: String
+    gender: String
+    birthday: DateTime
     token: String
     songs: [Song]
   }
@@ -48,6 +53,9 @@ const typeDefs = gql`
 
   input UserUpdateInput {
     name: String
+    mobile: String
+    gender: String
+    birthday: DateTime
     oldPassword: String
     newPassword: String
   }
