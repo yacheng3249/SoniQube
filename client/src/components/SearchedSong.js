@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { searchSongURL } from "../utils/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { ADD_SONG } from "../utils/apolloGraphql";
@@ -19,7 +18,9 @@ const SearchedSong = ({ textInput, refetch, audioRef }) => {
   //使用 useEffect 來確保 fetchData 只會在 textInput 更改時執行，以避免不必要的 API 請求。當 fetchData 從 API 獲取到資料後，使用 setSearchedSongData 函數來更新 searchedSongData 狀態。在 return 中，使用條件渲染來確保 searchedSongData 存在時才呈現資料。
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(searchSongURL(textInput));
+      const searchSongURL = `https://api.jamendo.com/v3.0/tracks/?client_id=${process.env.REACT_APP_JAMENDO_CLIENT_ID}&format=jsonpretty&limit=20&name=${textInput}`;
+
+      const response = await axios.get(searchSongURL);
       setSearchedSongData(response.data.results);
       const songs = response.data.results.map((song) => {
         const { id, name, artist_name, image, audio } = song;
