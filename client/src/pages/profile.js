@@ -87,7 +87,7 @@ const UserInfo = ({ user, setProfileState }) => {
       </div>
       <div className="profile-format">
         <p>Birthday</p>
-        <p>{user.birthday.split("T")[0]}</p>
+        <p>{user.birthday ? user.birthday.split("T")[0] : user.birthday}</p>
       </div>
       <FontAwesomeIcon icon={faEdit} onClick={() => setProfileState("edit")} />
     </>
@@ -181,7 +181,9 @@ const EditProfile = ({ setProfileState, update_userInfo_Fn, user }) => {
           <label>Birthday</label>
           <input
             type="date"
-            defaultValue={user.birthday.split("T")[0]}
+            defaultValue={
+              user.birthday ? user.birthday.split("T")[0] : user.birthday
+            }
             {...register("birthday")}
           />
         </div>

@@ -7,7 +7,11 @@ import useSignInStore from "../zustand/useSignInStore";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "../providers/AlertProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faSpinner,
+} from "@fortawesome/free-solid-svg-icons";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -21,7 +25,7 @@ const SignUp = () => {
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
 
-  const [signUpFn] = useMutation(SIGNUP_MUTATION, {
+  const [signUpFn, { loading: signUp_loading }] = useMutation(SIGNUP_MUTATION, {
     onCompleted({ signUp }) {
       if (signUp.message) {
         reset();
@@ -83,7 +87,13 @@ const SignUp = () => {
           </div>
           <small>{errors?.password && errors.password.message}</small>
         </div>
-        <button className="submit-button">Submit</button>
+        <button className="submit-button">
+          {signUp_loading ? (
+            <FontAwesomeIcon size="1x" icon={faSpinner} spin={true} />
+          ) : (
+            <>Submit</>
+          )}
+        </button>
       </form>
     </div>
   );
