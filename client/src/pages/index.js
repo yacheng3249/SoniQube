@@ -4,6 +4,7 @@ import Player from "../components/Player";
 import useSignInStore from "../zustand/useSignInStore";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import { Link } from "react-router-dom";
+import recordPlayer from "../img/record-player.jpg";
 
 const Home = ({ audioRef }) => {
   const { token } = useSignInStore();
@@ -25,11 +26,7 @@ const Home = ({ audioRef }) => {
         )
       ) : (
         <div className="home-container">
-          <img
-            className="home-image"
-            src="https://images.unsplash.com/photo-1519681393784-d120267933ba"
-            alt="cover image"
-          />
+          <img className="home-image" src={recordPlayer} alt="cover image" />
           <div className="button-wrapper">
             <Link to="/login">
               <button>Sign In</button>
