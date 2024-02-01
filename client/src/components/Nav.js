@@ -33,7 +33,7 @@ const Nav = React.memo(
         </h1>
         <div className="menu">
           {token ? (
-            <div className="dropdown" onClick={handleDropdownClick}>
+            <div onClick={handleDropdownClick}>
               <FontAwesomeIcon
                 size="2x"
                 icon={faUserCircle}
