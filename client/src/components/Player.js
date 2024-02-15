@@ -62,7 +62,6 @@ const Player = ({ audioRef }) => {
   const skipTrackHandler = async (direction, currentSong) => {
     const currentIndex = songs.findIndex((song) => song.id === currentSong.id);
     if (direction === "skip-forward") {
-      // setCurrentId(songs[(currentIndex + 1) % songs.length]);
       setCurrentSong(songs[(currentIndex + 1) % songs.length]);
     }
     if (direction === "skip-back") {
@@ -70,7 +69,6 @@ const Player = ({ audioRef }) => {
         (currentIndex - 1) % songs.length === -1
           ? songs.length - 1
           : currentIndex - 1;
-      // setCurrentId(songs[preIndex]);
       setCurrentSong(songs[preIndex]);
     }
     playAudio(isPlaying, audioRef);

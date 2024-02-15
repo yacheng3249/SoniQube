@@ -19,7 +19,7 @@ import reportWebVitals from "./reportWebVitals";
 // });
 
 const httpLink = createHttpLink({
-  uri: "https://b5mg5zdync.execute-api.ap-east-1.amazonaws.com/dev/graphql",
+  uri: "https://rdx0iz8tx5.execute-api.ap-east-1.amazonaws.com/dev/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {

@@ -45,7 +45,10 @@ const Nav = React.memo(
                   onClick={() => setShowDropdown(false)}
                 >
                   <li>
-                    <Link to="/profile" onClick={() => setPlayingStatus()}>
+                    <Link
+                      to="/profile"
+                      onClick={() => (isPlaying ? setPlayingStatus() : "")}
+                    >
                       Profile
                     </Link>
                   </li>
