@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import LibrarySong from "./LibrarySong";
-import SearchedSong from "./SearchedSong";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 
 const Library = ({ audioRef, refetch, libraryStatus, setLibraryStatus }) => {
@@ -30,22 +29,14 @@ const Library = ({ audioRef, refetch, libraryStatus, setLibraryStatus }) => {
         </button>
       </div>
 
-      {!textInput ? (
-        currentSong ? (
-          <LibrarySong
-            audioRef={audioRef}
-            refetch={refetch}
-            textInput={textInput}
-          />
-        ) : (
-          <p>Add some songs and enjoy your day!</p>
-        )
-      ) : (
-        <SearchedSong
-          textInput={textInput}
-          refetch={refetch}
+      {currentSong ? (
+        <LibrarySong
           audioRef={audioRef}
+          refetch={refetch}
+          textInput={textInput}
         />
+      ) : (
+        <p>Add some songs and enjoy your day!</p>
       )}
     </div>
   );
