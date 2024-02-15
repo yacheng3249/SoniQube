@@ -1,19 +1,22 @@
 import React, { useCallback, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useCurrentSongStore from "../zustand/useCurrentSongStore";
 import usePlayingStatusStore from "../zustand/usePlayingStatusStore";
 import { playAudio } from "../utils";
+import { delete_song, ADD_SONG } from "../utils/apolloGraphql";
 import { useAlert } from "../providers/AlertProvider";
 import { useMutation } from "@apollo/client";
-import { delete_song } from "../utils/apolloGraphql";
+import axios from "axios";
+import { debounce } from "lodash";
 
 const LibrarySong = ({ audioRef, refetch, textInput }) => {
-  const { alert } = useAlert();
-  const { currentSong, setCurrentSong, songs } = useCurrentSongStore();
+  const { alert, notify } = useAlert();
+  const { currentSong, setCurrentSong, songs, setSongs } =
+    useCurrentSongStore();
   const { isPlaying } = usePlayingStatusStore();
 
-  const songSelectHandler = async (song) => {
+  const songSelectHandler = (song) => {
     setCurrentSong(song);
     playAudio(isPlaying, audioRef);
   };
@@ -55,17 +58,72 @@ const LibrarySong = ({ audioRef, refetch, textInput }) => {
     [alert, delete_Song_Fn]
   );
 
-  // const [loadSongs] = useLazyQuery(GET_SONGS, {
-  //   onCompleted({ songs }) {
-  //     setSongs(songs);
-  //   },
-  // });
+  // search songs
+  const fetchData = debounce(async () => {
+    try {
+      const searchSongURL = `https://api.jamendo.com/v3.0/tracks/?client_id=${process.env.REACT_APP_JAMENDO_CLIENT_ID}&format=jsonpretty&limit=10&name=${textInput}`;
+
+      const response = await axios.get(searchSongURL);
+
+      if (response) {
+        const songs = response.data.results.map((song) => {
+          const { id, name, artist_name, image, audio } = song;
+          return {
+            id,
+            name,
+            artist: artist_name,
+            cover: image,
+            audio,
+          };
+        });
+        setSongs(songs);
+      }
+    } catch (error) {
+      console.error("Error during request", error);
+    }
+  }, 500);
 
   useEffect(() => {
     if (!textInput) {
       refetch();
+    } else {
+      fetchData();
+
+      return () => {
+        fetchData.cancel();
+      };
     }
   }, [textInput]);
+
+  const [add_Song_Fn] = useMutation(ADD_SONG, {
+    onCompleted({ addSong: { message } }) {
+      if (message) {
+        notify(message);
+      } else {
+        notify("Song added");
+        refetch();
+      }
+    },
+    onError(error) {
+      notify(`${error}`);
+      return null;
+    },
+  });
+
+  const songAddHandler = (song) => {
+    console.log(song);
+    const { name, artist, cover, audio } = song;
+    add_Song_Fn({
+      variables: {
+        songInput: {
+          name,
+          artist,
+          cover,
+          audio,
+        },
+      },
+    });
+  };
 
   return (
     <div>
@@ -85,9 +143,10 @@ const LibrarySong = ({ audioRef, refetch, textInput }) => {
           </div>
           <FontAwesomeIcon
             size="1x"
-            className="button-sm"
-            icon={faTrash}
-            onClick={() => songDeleteHandler(song)}
+            icon={textInput ? faPlus : faTrash}
+            onClick={() =>
+              textInput ? songAddHandler(song) : songDeleteHandler(song)
+            }
           />
         </div>
       ))}
