@@ -113,7 +113,6 @@ const CheckEmail = ({ setStep, setEmail }) => {
         <input
           placeholder="Please enter your email"
           type="text"
-          name="email"
           {...register("email", requiredOptions.email)}
         />
         <small>{errors?.email && errors.email.message}</small>
@@ -199,7 +198,6 @@ const VerifyCode = ({ setStep, email }) => {
         <input
           placeholder="Please enter code"
           type="text"
-          name="verificationCode"
           {...register("verificationCode", requiredOptions.verificationCode)}
         />
         <small>

@@ -101,7 +101,6 @@ const LibrarySong = ({ audioRef, refetch, textInput }) => {
         notify(message);
       } else {
         notify("Song added");
-        refetch();
       }
     },
     onError(error) {
@@ -111,7 +110,6 @@ const LibrarySong = ({ audioRef, refetch, textInput }) => {
   });
 
   const songAddHandler = (song) => {
-    console.log(song);
     const { name, artist, cover, audio } = song;
     add_Song_Fn({
       variables: {
